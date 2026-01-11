@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Auction.DAL\Auction.DAL.csproj" />
+    <ProjectReference Include="..\Auction.Entities\Auction.Entities.csproj" />
+  </ItemGroup>
+
 </Project>
