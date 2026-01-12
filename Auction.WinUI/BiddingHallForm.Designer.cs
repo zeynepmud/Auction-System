@@ -35,6 +35,8 @@
             label2 = new Label();
             txtBidAmount = new TextBox();
             btnPlaceBid = new Button();
+            lblHighBid = new Label();
+            rtbDescription = new RichTextBox();
             ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
             SuspendLayout();
             // 
@@ -49,6 +51,7 @@
             dgvProducts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvProducts.Size = new Size(300, 328);
             dgvProducts.TabIndex = 0;
+            dgvProducts.CellClick += dgvProducts_CellClick;
             // 
             // lblWelcomeUser
             // 
@@ -83,7 +86,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F);
-            label2.Location = new Point(473, 184);
+            label2.Location = new Point(473, 380);
             label2.Name = "label2";
             label2.Size = new Size(100, 28);
             label2.TabIndex = 4;
@@ -91,7 +94,7 @@
             // 
             // txtBidAmount
             // 
-            txtBidAmount.Location = new Point(570, 188);
+            txtBidAmount.Location = new Point(570, 384);
             txtBidAmount.Name = "txtBidAmount";
             txtBidAmount.Size = new Size(125, 27);
             txtBidAmount.TabIndex = 5;
@@ -100,12 +103,32 @@
             // 
             btnPlaceBid.BackColor = Color.FromArgb(0, 192, 0);
             btnPlaceBid.ForeColor = SystemColors.ButtonFace;
-            btnPlaceBid.Location = new Point(589, 221);
+            btnPlaceBid.Location = new Point(589, 417);
             btnPlaceBid.Name = "btnPlaceBid";
             btnPlaceBid.Size = new Size(94, 29);
             btnPlaceBid.TabIndex = 6;
             btnPlaceBid.Text = "Teklif Ver";
             btnPlaceBid.UseVisualStyleBackColor = false;
+            btnPlaceBid.Click += btnPlaceBid_Click;
+            // 
+            // lblHighBid
+            // 
+            lblHighBid.AutoSize = true;
+            lblHighBid.Font = new Font("Segoe UI", 12F);
+            lblHighBid.Location = new Point(421, 335);
+            lblHighBid.Name = "lblHighBid";
+            lblHighBid.Size = new Size(164, 28);
+            lblHighBid.TabIndex = 7;
+            lblHighBid.Text = "En Yüksek Teklif: -";
+            // 
+            // rtbDescription
+            // 
+            rtbDescription.Location = new Point(460, 185);
+            rtbDescription.Name = "rtbDescription";
+            rtbDescription.ReadOnly = true;
+            rtbDescription.Size = new Size(235, 120);
+            rtbDescription.TabIndex = 8;
+            rtbDescription.Text = "";
             // 
             // BiddingHallForm
             // 
@@ -113,6 +136,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
             ClientSize = new Size(950, 551);
+            Controls.Add(rtbDescription);
+            Controls.Add(lblHighBid);
             Controls.Add(btnPlaceBid);
             Controls.Add(txtBidAmount);
             Controls.Add(label2);
@@ -122,6 +147,7 @@
             Controls.Add(dgvProducts);
             Name = "BiddingHallForm";
             Text = "Müzayede Salonu - Teklif Ver";
+            Load += BiddingHallForm_Load;
             ((System.ComponentModel.ISupportInitialize)dgvProducts).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -136,5 +162,8 @@
         private Label label2;
         private TextBox txtBidAmount;
         private Button btnPlaceBid;
+        private Label label3;
+        private Label lblHighBid;
+        private RichTextBox rtbDescription;
     }
 }

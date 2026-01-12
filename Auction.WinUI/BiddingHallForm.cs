@@ -15,24 +15,23 @@ namespace Auction.WinUI
         private readonly User _loggedInUser;
         private readonly IProductService _productService;
         private readonly IBidService _bidService;
+        private readonly IUserService _userService;
 
-        // Soru işareti (?) null olabileceğini belirtir, böylece sarı uyarıyı giderir.
         private Product? _selectedProduct;
 
         public BiddingHallForm(User user)
         {
             InitializeComponent();
-            _loggedInUser = user; // Form1'den gelen kullanıcıyı hafızaya alıyoruz.
+            _loggedInUser = user;
 
-            // Servis bağlantılarını kuruyoruz.
             var context = new Auction.DAL.AppDbContext();
             _productService = new ProductService(new EfRepositoryBase<Product>(context));
             _bidService = new BidService(new EfRepositoryBase<Bid>(context));
+            _userService = new UserService(new EfRepositoryBase<User>(context));
         }
 
         private void BiddingHallForm_Load(object sender, EventArgs e)
         {
-            // Kullanıcıyı ismiyle karşılıyoruz.
             lblWelcomeUser.Text = $"Hoş geldin, {_loggedInUser.FirstName} {_loggedInUser.LastName}";
             UrunleriListele();
         }
@@ -40,41 +39,62 @@ namespace Auction.WinUI
         private void UrunleriListele()
         {
             dgvProducts.DataSource = null;
-            // Sadece süresi dolmamış aktif ürünleri listeliyoruz.
             dgvProducts.DataSource = _productService.GetAll()
                                         .Where(x => x.EndDate > DateTime.Now)
                                         .ToList();
         }
 
+        private void EnYuksekTeklifiGoster()
+        {
+            if (_selectedProduct == null) return;
+
+            var allBids = _bidService.GetAll().Where(b => b.ProductId == _selectedProduct.Id).ToList();
+            var highestBid = allBids.OrderByDescending(b => b.Amount).FirstOrDefault();
+
+            if (highestBid != null)
+            {
+                var bidder = _userService.GetAll().FirstOrDefault(u => u.Id == highestBid.UserId);
+                string bidderName = bidder != null ? $"{bidder.FirstName} {bidder.LastName[0]}." : "Bilinmiyor";
+
+                lblHighBid.Text = $"En Yüksek: {highestBid.Amount} TL - {bidderName}";
+            }
+            else
+            {
+                lblHighBid.Text = $"Henüz teklif yok. (Başlangıç: {_selectedProduct.StartingPrice} TL)";
+            }
+        }
+
         private void dgvProducts_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Tablodan bir satır seçildiğinde o ürünü yakalıyoruz.
             if (dgvProducts.CurrentRow != null)
             {
                 _selectedProduct = (Product)dgvProducts.CurrentRow.DataBoundItem;
                 lblSelectedProduct.Text = _selectedProduct.Name;
+
+                // --- YENİ EKLENEN KISIM: AÇIKLAMA GETİRME ---
+                // Eğer ürünün açıklaması boşsa kullanıcıya bilgi veriyoruz
+                rtbDescription.Text = string.IsNullOrEmpty(_selectedProduct.Description)
+                                      ? "Bu ürün için bir açıklama girilmemiş."
+                                      : _selectedProduct.Description;
+                // ------------------------------------------
+
+                EnYuksekTeklifiGoster();
             }
         }
 
         private void btnPlaceBid_Click(object sender, EventArgs e)
         {
-            // 1. Ürün seçili mi kontrolü.
             if (_selectedProduct == null)
             {
                 MessageBox.Show("Lütfen önce listeden bir ürün seçiniz!", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // 2. Sayısal değer kontrolü.
             if (decimal.TryParse(txtBidAmount.Text, out decimal bidAmount))
             {
-                // 3. Mevcut en yüksek teklifi bulma mantığı.
                 var allBids = _bidService.GetAll().Where(b => b.ProductId == _selectedProduct.Id).ToList();
-
-                // Eğer hiç teklif yoksa başlangıç fiyatını baz al, varsa en yükseğini bul.
                 decimal currentMaxBid = allBids.Any() ? allBids.Max(b => b.Amount) : _selectedProduct.StartingPrice;
 
-                // 4. Teklif geçerlilik kontrolü.
                 if (bidAmount <= currentMaxBid)
                 {
                     MessageBox.Show($"Teklifiniz mevcut fiyattan ({currentMaxBid} TL) daha yüksek olmalıdır!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -83,11 +103,10 @@ namespace Auction.WinUI
 
                 try
                 {
-                    // 5. Yeni teklif nesnesini oluşturup kaydediyoruz.
                     var newBid = new Bid
                     {
                         Amount = bidAmount,
-                        BidTime = DateTime.Now, // Bid.cs içindeki isme (BidTime) göre güncelledik.
+                        BidTime = DateTime.Now,
                         ProductId = _selectedProduct.Id,
                         UserId = _loggedInUser.Id
                     };
@@ -96,9 +115,10 @@ namespace Auction.WinUI
 
                     MessageBox.Show("Teklifiniz başarıyla iletildi!", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // İşlem bitince kutuyu temizle ve listeyi tazele.
                     txtBidAmount.Clear();
+
                     UrunleriListele();
+                    EnYuksekTeklifiGoster();
                 }
                 catch (Exception ex)
                 {

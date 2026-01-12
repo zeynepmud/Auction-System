@@ -52,7 +52,8 @@ namespace Auction.WinUI
                     // 2. ATAMA: Veriyi Label'dan değil TextBox'tan (txtName) alıyoruz
                     Name = txtName.Text,
                     StartingPrice = decimal.Parse(txtStartingPrice.Text),
-                    EndDate = dtpEndDate.Value
+                    EndDate = dtpEndDate.Value,
+                    Description = txtDescription.Text
                 };
 
                 _productService.Add(product);
@@ -64,6 +65,7 @@ namespace Auction.WinUI
                 // 3. TEMİZLEME: lblUrunAdi.Clear() HATALIDIR. txtName.Clear() DOĞRUDUR.
                 txtName.Clear();
                 txtStartingPrice.Clear();
+                txtDescription.Clear();
             }
             catch (FormatException)
             {

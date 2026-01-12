@@ -36,6 +36,8 @@
             dtpEndDate = new DateTimePicker();
             btnProductSave = new Button();
             dgvProducts = new DataGridView();
+            label1 = new Label();
+            txtDescription = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
             SuspendLayout();
             // 
@@ -51,7 +53,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(39, 111);
+            label2.Location = new Point(39, 113);
             label2.Name = "label2";
             label2.Size = new Size(118, 20);
             label2.TabIndex = 1;
@@ -60,7 +62,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(2, 141);
+            label3.Location = new Point(2, 185);
             label3.Name = "label3";
             label3.Size = new Size(155, 20);
             label3.TabIndex = 2;
@@ -75,14 +77,14 @@
             // 
             // txtStartingPrice
             // 
-            txtStartingPrice.Location = new Point(163, 108);
+            txtStartingPrice.Location = new Point(163, 110);
             txtStartingPrice.Name = "txtStartingPrice";
             txtStartingPrice.Size = new Size(210, 27);
             txtStartingPrice.TabIndex = 4;
             // 
             // dtpEndDate
             // 
-            dtpEndDate.Location = new Point(163, 141);
+            dtpEndDate.Location = new Point(163, 185);
             dtpEndDate.Name = "dtpEndDate";
             dtpEndDate.Size = new Size(210, 27);
             dtpEndDate.TabIndex = 5;
@@ -106,11 +108,31 @@
             dgvProducts.Size = new Size(300, 188);
             dgvProducts.TabIndex = 7;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(83, 154);
+            label1.Name = "label1";
+            label1.Size = new Size(50, 20);
+            label1.TabIndex = 8;
+            label1.Text = "label1";
+            // 
+            // txtDescription
+            // 
+            txtDescription.Location = new Point(163, 147);
+            txtDescription.Multiline = true;
+            txtDescription.Name = "txtDescription";
+            txtDescription.ScrollBars = ScrollBars.Vertical;
+            txtDescription.Size = new Size(210, 34);
+            txtDescription.TabIndex = 9;
+            // 
             // ProductForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(txtDescription);
+            Controls.Add(label1);
             Controls.Add(dgvProducts);
             Controls.Add(btnProductSave);
             Controls.Add(dtpEndDate);
@@ -136,5 +158,7 @@
         private DateTimePicker dtpEndDate;
         private Button btnProductSave;
         private DataGridView dgvProducts;
+        private Label label1;
+        private TextBox txtDescription;
     }
 }
