@@ -13,6 +13,7 @@ namespace Auction.Entities
         public string LastName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
+        public string Role { get; set; } = null!; // "Admin" veya "User" gibi.
 
         // İlişki: Bir kullanıcının birden fazla teklifi olabilir.
         public virtual ICollection<Bid> Bids { get; set; } = new List<Bid>();

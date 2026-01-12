@@ -16,6 +16,6 @@ namespace Auction.Entities
         public virtual User User { get; set; } = null!;
 
         public int ProductId { get; set; }
-        public virtual Product Product { get; set; } = null!;
+       public virtual Product Product { get; set; } = null!;
     }
 }
