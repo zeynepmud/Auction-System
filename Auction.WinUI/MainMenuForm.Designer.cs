@@ -28,19 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            btnUserEntry = new Button();
             lblWelcome = new Label();
+            btnLogin = new Button();
+            btnRegister = new Button();
             SuspendLayout();
-            // 
-            // btnUserEntry
-            // 
-            btnUserEntry.Location = new Point(291, 185);
-            btnUserEntry.Name = "btnUserEntry";
-            btnUserEntry.Size = new Size(184, 78);
-            btnUserEntry.TabIndex = 0;
-            btnUserEntry.Text = "Giriş";
-            btnUserEntry.UseVisualStyleBackColor = true;
-            btnUserEntry.Click += btnUserEntry_Click;
             // 
             // lblWelcome
             // 
@@ -52,13 +43,34 @@
             lblWelcome.TabIndex = 2;
             lblWelcome.Text = "Online Müzayede Sistemine Hoş Geldiniz";
             // 
+            // btnLogin
+            // 
+            btnLogin.Location = new Point(207, 173);
+            btnLogin.Name = "btnLogin";
+            btnLogin.Size = new Size(170, 86);
+            btnLogin.TabIndex = 3;
+            btnLogin.Text = "Giriş Yap";
+            btnLogin.UseVisualStyleBackColor = true;
+            btnLogin.Click += btnLogin_Click;
+            // 
+            // btnRegister
+            // 
+            btnRegister.Location = new Point(393, 173);
+            btnRegister.Name = "btnRegister";
+            btnRegister.Size = new Size(170, 86);
+            btnRegister.TabIndex = 4;
+            btnRegister.Text = "Kayıt Ol";
+            btnRegister.UseVisualStyleBackColor = true;
+            btnRegister.Click += btnRegister_Click;
+            // 
             // MainMenuForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnRegister);
+            Controls.Add(btnLogin);
             Controls.Add(lblWelcome);
-            Controls.Add(btnUserEntry);
             Name = "MainMenuForm";
             Text = "MainMenuForm";
             ResumeLayout(false);
@@ -66,8 +78,8 @@
         }
 
         #endregion
-
-        private Button btnUserEntry;
         private Label lblWelcome;
+        private Button btnLogin;
+        private Button btnRegister;
     }
 }

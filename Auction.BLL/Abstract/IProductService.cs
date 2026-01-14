@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Auction.Entities;
 
 namespace Auction.BLL.Abstract
@@ -12,6 +8,10 @@ namespace Auction.BLL.Abstract
         void Add(Product product);
         void Update(Product product);
         void Delete(Product product);
+
+        // Değişiklikleri veritabanına mühürlemek için
+        void Save();
+
         List<Product> GetAll();
         Product GetById(int id);
     }

@@ -22,14 +22,12 @@ namespace Auction.DAL.Concrete
 
         public void Add(TEntity entity)
         {
-            _context.Set<TEntity>().Add(entity);
-            _context.SaveChanges();
+            _context.Set<TEntity>().Add(entity); // Sadece eklenecek olarak işaretle
         }
 
         public void Delete(TEntity entity)
         {
             _context.Set<TEntity>().Remove(entity);
-            _context.SaveChanges();
         }
 
         public TEntity Get(Expression<Func<TEntity, bool>> filter)
@@ -48,8 +46,7 @@ namespace Auction.DAL.Concrete
 
         public void Update(TEntity entity)
         {
-            _context.Set<TEntity>().Update(entity);
-            _context.SaveChanges();
+            _context.Set<TEntity>().Update(entity); // Sadece güncellenecek olarak işaretle
         }
     }
 }

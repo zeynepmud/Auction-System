@@ -10,13 +10,18 @@ namespace Auction.WinUI
             InitializeComponent();
         }
 
-        // Kullanıcı Kayıt ve Giriş Butonu İçin
-        private void btnUserEntry_Click(object sender, EventArgs e)
+        // Giriş Yap Butonu
+        private void btnLogin_Click(object sender, EventArgs e)
         {
-            Form1 userForm = new Form1();
-            userForm.Show(); // Form1'i açar
+            LoginForm login = new LoginForm();
+            login.Show();
         }
 
-      
+        // Kayıt Ol Butonu
+        private void btnRegister_Click(object sender, EventArgs e)
+        {
+            RegisterForm register = new RegisterForm();
+            register.Show();
+        }
     }
 }

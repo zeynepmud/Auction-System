@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Auction.Entities;
 
 namespace Auction.BLL.Abstract
 {
+    // Teklif servisimizin dış dünyaya söz verdiği metotlar listesi
     public interface IBidService
     {
         void Add(Bid bid);
-        List<Bid> GetBidsByProductId(int productId);
+
+        //Unit of Work kaydetme emri
+        void Save();
+
         List<Bid> GetAll();
+        List<Bid> GetBidsByProductId(int productId);
     }
 }

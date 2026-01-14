@@ -49,7 +49,7 @@
             dgvProducts.ReadOnly = true;
             dgvProducts.RowHeadersWidth = 51;
             dgvProducts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvProducts.Size = new Size(300, 328);
+            dgvProducts.Size = new Size(1024, 328);
             dgvProducts.TabIndex = 0;
             dgvProducts.CellClick += dgvProducts_CellClick;
             // 
@@ -67,7 +67,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 12F);
-            label1.Location = new Point(454, 134);
+            label1.Location = new Point(98, 491);
             label1.Name = "label1";
             label1.Size = new Size(119, 28);
             label1.TabIndex = 2;
@@ -77,7 +77,7 @@
             // 
             lblSelectedProduct.AutoSize = true;
             lblSelectedProduct.Font = new Font("Segoe UI", 12F);
-            lblSelectedProduct.Location = new Point(570, 134);
+            lblSelectedProduct.Location = new Point(214, 491);
             lblSelectedProduct.Name = "lblSelectedProduct";
             lblSelectedProduct.Size = new Size(0, 28);
             lblSelectedProduct.TabIndex = 3;
@@ -86,7 +86,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F);
-            label2.Location = new Point(473, 380);
+            label2.Location = new Point(527, 537);
             label2.Name = "label2";
             label2.Size = new Size(100, 28);
             label2.TabIndex = 4;
@@ -94,7 +94,7 @@
             // 
             // txtBidAmount
             // 
-            txtBidAmount.Location = new Point(570, 384);
+            txtBidAmount.Location = new Point(624, 541);
             txtBidAmount.Name = "txtBidAmount";
             txtBidAmount.Size = new Size(125, 27);
             txtBidAmount.TabIndex = 5;
@@ -103,7 +103,7 @@
             // 
             btnPlaceBid.BackColor = Color.FromArgb(0, 192, 0);
             btnPlaceBid.ForeColor = SystemColors.ButtonFace;
-            btnPlaceBid.Location = new Point(589, 417);
+            btnPlaceBid.Location = new Point(643, 574);
             btnPlaceBid.Name = "btnPlaceBid";
             btnPlaceBid.Size = new Size(94, 29);
             btnPlaceBid.TabIndex = 6;
@@ -115,7 +115,7 @@
             // 
             lblHighBid.AutoSize = true;
             lblHighBid.Font = new Font("Segoe UI", 12F);
-            lblHighBid.Location = new Point(421, 335);
+            lblHighBid.Location = new Point(475, 492);
             lblHighBid.Name = "lblHighBid";
             lblHighBid.Size = new Size(164, 28);
             lblHighBid.TabIndex = 7;
@@ -123,10 +123,10 @@
             // 
             // rtbDescription
             // 
-            rtbDescription.Location = new Point(460, 185);
+            rtbDescription.Location = new Point(98, 541);
             rtbDescription.Name = "rtbDescription";
             rtbDescription.ReadOnly = true;
-            rtbDescription.Size = new Size(235, 120);
+            rtbDescription.Size = new Size(359, 120);
             rtbDescription.TabIndex = 8;
             rtbDescription.Text = "";
             // 
@@ -135,7 +135,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
-            ClientSize = new Size(950, 551);
+            ClientSize = new Size(1153, 679);
             Controls.Add(rtbDescription);
             Controls.Add(lblHighBid);
             Controls.Add(btnPlaceBid);

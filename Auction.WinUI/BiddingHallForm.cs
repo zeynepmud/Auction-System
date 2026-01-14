@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Auction.BLL.Abstract;
 using Auction.BLL.Concrete;
+using Auction.DAL.Abstract;
 using Auction.DAL.Concrete;
 using Auction.Entities;
 
@@ -24,10 +25,15 @@ namespace Auction.WinUI
             InitializeComponent();
             _loggedInUser = user;
 
+            // Tüm servislerin aynı Context'i paylaşması için merkezi bir Unit of Work kuruyoruz.
             var context = new Auction.DAL.AppDbContext();
-            _productService = new ProductService(new EfRepositoryBase<Product>(context));
-            _bidService = new BidService(new EfRepositoryBase<Bid>(context));
-            _userService = new UserService(new EfRepositoryBase<User>(context));
+            IUnitOfWork uow = new UnitOfWork(context);
+
+            // Servislerimizi oluştururken hem Repository'yi hem de Unit of Work'ü veriyoruz. 
+            // Böylece CS7036 parametre hatasını çözmüş oluyoruz.
+            _productService = new ProductService(new EfRepositoryBase<Product>(context), uow);
+            _bidService = new BidService(new EfRepositoryBase<Bid>(context), uow);
+            _userService = new UserService(new EfRepositoryBase<User>(context), uow);
         }
 
         private void BiddingHallForm_Load(object sender, EventArgs e)
@@ -38,22 +44,44 @@ namespace Auction.WinUI
 
         private void UrunleriListele()
         {
+            // Veritabanından bitiş tarihi geçmemiş ürünleri listeleyelim.
             dgvProducts.DataSource = null;
             dgvProducts.DataSource = _productService.GetAll()
                                         .Where(x => x.EndDate > DateTime.Now)
                                         .ToList();
         }
 
+        // Grid üzerinden bir ürün seçildiğinde detaylarını getiren metot
+        private void dgvProducts_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvProducts.CurrentRow != null)
+            {
+                // Seçili satırdaki nesneyi Product tipine çevirip alıyoruz
+                _selectedProduct = (Product)dgvProducts.CurrentRow.DataBoundItem;
+                lblSelectedProduct.Text = _selectedProduct.Name;
+
+                // Ürün açıklamasını kontrol edip RichTextBox'a yazıyoruz
+                rtbDescription.Text = string.IsNullOrEmpty(_selectedProduct.Description)
+                                      ? "Bu ürün için bir açıklama girilmemiş."
+                                      : _selectedProduct.Description;
+
+                // Seçilen ürün için mevcut en yüksek teklifi ekrana yazdıralım
+                EnYuksekTeklifiGoster();
+            }
+        }
+
         private void EnYuksekTeklifiGoster()
         {
             if (_selectedProduct == null) return;
 
+            // Bu ürüne ait tüm teklifleri çekip fiyata göre azalan sıralıyoruz.
             var allBids = _bidService.GetAll().Where(b => b.ProductId == _selectedProduct.Id).ToList();
             var highestBid = allBids.OrderByDescending(b => b.Amount).FirstOrDefault();
 
             if (highestBid != null)
             {
-                var bidder = _userService.GetAll().FirstOrDefault(u => u.Id == highestBid.UserId);
+                // Teklifi kimin verdiğini kullanıcı servisinden buluyoruz
+                var bidder = _userService.GetById(highestBid.UserId);
                 string bidderName = bidder != null ? $"{bidder.FirstName} {bidder.LastName[0]}." : "Bilinmiyor";
 
                 lblHighBid.Text = $"En Yüksek: {highestBid.Amount} TL - {bidderName}";
@@ -64,40 +92,23 @@ namespace Auction.WinUI
             }
         }
 
-        private void dgvProducts_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (dgvProducts.CurrentRow != null)
-            {
-                _selectedProduct = (Product)dgvProducts.CurrentRow.DataBoundItem;
-                lblSelectedProduct.Text = _selectedProduct.Name;
-
-                // --- YENİ EKLENEN KISIM: AÇIKLAMA GETİRME ---
-                // Eğer ürünün açıklaması boşsa kullanıcıya bilgi veriyoruz
-                rtbDescription.Text = string.IsNullOrEmpty(_selectedProduct.Description)
-                                      ? "Bu ürün için bir açıklama girilmemiş."
-                                      : _selectedProduct.Description;
-                // ------------------------------------------
-
-                EnYuksekTeklifiGoster();
-            }
-        }
-
         private void btnPlaceBid_Click(object sender, EventArgs e)
         {
             if (_selectedProduct == null)
             {
-                MessageBox.Show("Lütfen önce listeden bir ürün seçiniz!", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Lütfen önce bir ürün seçiniz!", "Uyarı");
                 return;
             }
 
             if (decimal.TryParse(txtBidAmount.Text, out decimal bidAmount))
             {
+                // Mevcut en yüksek fiyatı kontrol ediyoruz (StartingPrice'ı baz alarak)
                 var allBids = _bidService.GetAll().Where(b => b.ProductId == _selectedProduct.Id).ToList();
-                decimal currentMaxBid = allBids.Any() ? allBids.Max(b => b.Amount) : _selectedProduct.StartingPrice;
+                decimal currentMax = allBids.Any() ? allBids.Max(b => b.Amount) : _selectedProduct.StartingPrice;
 
-                if (bidAmount <= currentMaxBid)
+                if (bidAmount <= currentMax)
                 {
-                    MessageBox.Show($"Teklifiniz mevcut fiyattan ({currentMaxBid} TL) daha yüksek olmalıdır!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Teklifiniz {currentMax} TL'den daha yüksek olmalıdır!", "Hata");
                     return;
                 }
 
@@ -111,23 +122,21 @@ namespace Auction.WinUI
                         UserId = _loggedInUser.Id
                     };
 
-                    _bidService.Add(newBid);
+                    _bidService.Add(newBid); // Önce bellekte listeye ekle
+                    _bidService.Save();    // Unit of Work sayesinde veritabanına mühürle!
 
-                    MessageBox.Show("Teklifiniz başarıyla iletildi!", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+                    MessageBox.Show("Teklifiniz başarıyla kaydedildi!", "Bilgi");
                     txtBidAmount.Clear();
-
-                    UrunleriListele();
                     EnYuksekTeklifiGoster();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Teklif kaydedilirken bir hata oluştu: " + ex.Message);
+                    MessageBox.Show("Teklif kaydedilirken hata: " + ex.Message);
                 }
             }
             else
             {
-                MessageBox.Show("Lütfen geçerli bir sayısal tutar giriniz!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lütfen geçerli bir tutar giriniz!", "Uyarı");
             }
         }
     }
