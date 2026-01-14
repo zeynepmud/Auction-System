@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            dgvProducts = new DataGridView();
             lblWelcomeUser = new Label();
             label1 = new Label();
             lblSelectedProduct = new Label();
@@ -37,21 +36,18 @@
             btnPlaceBid = new Button();
             lblHighBid = new Label();
             rtbDescription = new RichTextBox();
-            ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
+            tabControl = new TabControl();
+            tabActive = new TabPage();
+            dgvActive = new DataGridView();
+            tabClosed = new TabPage();
+            dgvClosed = new DataGridView();
+            lblTimer = new Label();
+            tabControl.SuspendLayout();
+            tabActive.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvActive).BeginInit();
+            tabClosed.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvClosed).BeginInit();
             SuspendLayout();
-            // 
-            // dgvProducts
-            // 
-            dgvProducts.BackgroundColor = SystemColors.ButtonFace;
-            dgvProducts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvProducts.Location = new Point(57, 105);
-            dgvProducts.Name = "dgvProducts";
-            dgvProducts.ReadOnly = true;
-            dgvProducts.RowHeadersWidth = 51;
-            dgvProducts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvProducts.Size = new Size(1024, 328);
-            dgvProducts.TabIndex = 0;
-            dgvProducts.CellClick += dgvProducts_CellClick;
             // 
             // lblWelcomeUser
             // 
@@ -130,12 +126,80 @@
             rtbDescription.TabIndex = 8;
             rtbDescription.Text = "";
             // 
+            // tabControl
+            // 
+            tabControl.AccessibleName = "";
+            tabControl.Controls.Add(tabActive);
+            tabControl.Controls.Add(tabClosed);
+            tabControl.Location = new Point(98, 90);
+            tabControl.Name = "tabControl";
+            tabControl.SelectedIndex = 0;
+            tabControl.Size = new Size(863, 328);
+            tabControl.TabIndex = 9;
+            tabControl.Tag = "";
+            // 
+            // tabActive
+            // 
+            tabActive.Controls.Add(dgvActive);
+            tabActive.Location = new Point(4, 29);
+            tabActive.Name = "tabActive";
+            tabActive.Padding = new Padding(3);
+            tabActive.Size = new Size(855, 295);
+            tabActive.TabIndex = 0;
+            tabActive.Text = "Aktif Müzayedeler";
+            tabActive.UseVisualStyleBackColor = true;
+            // 
+            // dgvActive
+            // 
+            dgvActive.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvActive.Dock = DockStyle.Fill;
+            dgvActive.Location = new Point(3, 3);
+            dgvActive.Name = "dgvActive";
+            dgvActive.RowHeadersWidth = 51;
+            dgvActive.Size = new Size(849, 289);
+            dgvActive.TabIndex = 0;
+            dgvActive.CellContentClick += dgvActive_CellClick;
+            // 
+            // tabClosed
+            // 
+            tabClosed.Controls.Add(dgvClosed);
+            tabClosed.Location = new Point(4, 29);
+            tabClosed.Name = "tabClosed";
+            tabClosed.Padding = new Padding(3);
+            tabClosed.Size = new Size(855, 295);
+            tabClosed.TabIndex = 1;
+            tabClosed.Text = "Kapanan Müzayedeler";
+            tabClosed.UseVisualStyleBackColor = true;
+            // 
+            // dgvClosed
+            // 
+            dgvClosed.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvClosed.Dock = DockStyle.Fill;
+            dgvClosed.Location = new Point(3, 3);
+            dgvClosed.Name = "dgvClosed";
+            dgvClosed.RowHeadersWidth = 51;
+            dgvClosed.Size = new Size(849, 289);
+            dgvClosed.TabIndex = 0;
+            // 
+            // lblTimer
+            // 
+            lblTimer.AutoSize = true;
+            lblTimer.BackColor = Color.White;
+            lblTimer.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            lblTimer.ForeColor = Color.Red;
+            lblTimer.Location = new Point(97, 435);
+            lblTimer.Name = "lblTimer";
+            lblTimer.Size = new Size(0, 46);
+            lblTimer.TabIndex = 10;
+            // 
             // BiddingHallForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
             ClientSize = new Size(1153, 679);
+            Controls.Add(lblTimer);
+            Controls.Add(tabControl);
             Controls.Add(rtbDescription);
             Controls.Add(lblHighBid);
             Controls.Add(btnPlaceBid);
@@ -144,18 +208,19 @@
             Controls.Add(lblSelectedProduct);
             Controls.Add(label1);
             Controls.Add(lblWelcomeUser);
-            Controls.Add(dgvProducts);
             Name = "BiddingHallForm";
             Text = "Müzayede Salonu - Teklif Ver";
             Load += BiddingHallForm_Load;
-            ((System.ComponentModel.ISupportInitialize)dgvProducts).EndInit();
+            tabControl.ResumeLayout(false);
+            tabActive.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvActive).EndInit();
+            tabClosed.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvClosed).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private DataGridView dgvProducts;
         private Label lblWelcomeUser;
         private Label label1;
         private Label lblSelectedProduct;
@@ -165,5 +230,11 @@
         private Label label3;
         private Label lblHighBid;
         private RichTextBox rtbDescription;
+        private TabControl tabControl;
+        private TabPage tabActive;
+        private TabPage tabClosed;
+        private DataGridView dgvActive;
+        private DataGridView dgvClosed;
+        private Label lblTimer;
     }
 }

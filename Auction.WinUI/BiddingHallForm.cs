@@ -19,22 +19,28 @@ namespace Auction.WinUI
         private readonly IUserService _userService;
 
         private Product? _selectedProduct;
+        private System.Windows.Forms.Timer _auctionTimer; // Geri sayım motorumuz
 
         public BiddingHallForm(User user)
         {
             InitializeComponent();
             _loggedInUser = user;
 
-            // Tüm servislerin aynı Context'i paylaşması için merkezi bir Unit of Work kuruyoruz.
+            // Mimari Kurulum: Tüm servisler aynı Unit of Work'ü kullanıyor
             var context = new Auction.DAL.AppDbContext();
             IUnitOfWork uow = new UnitOfWork(context);
 
-            // Servislerimizi oluştururken hem Repository'yi hem de Unit of Work'ü veriyoruz. 
-            // Böylece CS7036 parametre hatasını çözmüş oluyoruz.
             _productService = new ProductService(new EfRepositoryBase<Product>(context), uow);
             _bidService = new BidService(new EfRepositoryBase<Bid>(context), uow);
             _userService = new UserService(new EfRepositoryBase<User>(context), uow);
+
+            // Timer ayarları
+            _auctionTimer = new System.Windows.Forms.Timer();
+            _auctionTimer.Interval = 1000; // 1 saniyede bir çalış
+            _auctionTimer.Tick += AuctionTimer_Tick; // Her saniye ne yapacağını söyleyen metot
+    
         }
+
 
         private void BiddingHallForm_Load(object sender, EventArgs e)
         {
@@ -42,31 +48,79 @@ namespace Auction.WinUI
             UrunleriListele();
         }
 
+        // --- PROFESYONEL LİSTELEME MANTIGI ---
         private void UrunleriListele()
         {
-            // Veritabanından bitiş tarihi geçmemiş ürünleri listeleyelim.
-            dgvProducts.DataSource = null;
-            dgvProducts.DataSource = _productService.GetAll()
-                                        .Where(x => x.EndDate > DateTime.Now)
-                                        .ToList();
+            var tumUrunler = _productService.GetAll();
+            var simdi = DateTime.Now;
+
+            // 1. AKTİF MÜZAYEDELERİ FİLTRELE VE DOLDUR
+            var aktifListesi = tumUrunler
+                .Where(p => p.EndDate > simdi)
+                .Select(p => new ProductViewModel
+                {
+                    Id = p.Id,
+                    UrunAdi = p.Name,
+                    Aciklama = p.Description,
+                    BaslangicFiyati = p.StartingPrice,
+                    AcilisTarihi = p.CreatedDate,
+                    BitisTarihi = p.EndDate,
+                    // O ürüne gelen en yüksek teklifi buluyoruz
+                    EnYuksekTeklif = _bidService.GetAll().Where(b => b.ProductId == p.Id).Any()
+                                     ? _bidService.GetAll().Where(b => b.ProductId == p.Id).Max(b => b.Amount)
+                                     : p.StartingPrice
+                }).ToList();
+
+            dgvActive.DataSource = aktifListesi;
+            dgvActive.Columns["Id"].Visible = false; // Id gizlensin
+            dgvActive.Columns["Kazanan"].Visible = false; // Aktiflerde kazanan sütunu görünmesin
+
+            // 2. KAPANAN MÜZAYEDELERİ FİLTRELE VE DOLDUR
+            var kapananListesi = tumUrunler
+                .Where(p => p.EndDate <= simdi)
+                .Select(p => {
+                    // Kapanan ürün için en yüksek teklifi ve vereni buluyoruz
+                    var enYuksekBid = _bidService.GetAll()
+                                        .Where(b => b.ProductId == p.Id)
+                                        .OrderByDescending(b => b.Amount)
+                                        .FirstOrDefault();
+
+                    var kazananKisi = enYuksekBid != null
+                                      ? _userService.GetById(enYuksekBid.UserId).FirstName + " " + _userService.GetById(enYuksekBid.UserId).LastName
+                                      : "Satılamadı";
+
+                    return new ProductViewModel
+                    {
+                        Id = p.Id,
+                        UrunAdi = p.Name,
+                        Aciklama = p.Description,
+                        BaslangicFiyati = p.StartingPrice,
+                        EnYuksekTeklif = enYuksekBid?.Amount ?? 0,
+                        Kazanan = kazananKisi, // Kazananın adı burada
+                        AcilisTarihi = p.CreatedDate,
+                        BitisTarihi = p.EndDate
+                    };
+                }).ToList();
+
+            dgvClosed.DataSource = kapananListesi;
+            dgvClosed.Columns["Id"].Visible = false;
         }
 
-        // Grid üzerinden bir ürün seçildiğinde detaylarını getiren metot
-        private void dgvProducts_CellClick(object sender, DataGridViewCellEventArgs e)
+        // Aktif tabloya tıklandığında teklif verme alanını doldurur
+        private void dgvActive_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvProducts.CurrentRow != null)
+            if (dgvActive.CurrentRow != null)
             {
-                // Seçili satırdaki nesneyi Product tipine çevirip alıyoruz
-                _selectedProduct = (Product)dgvProducts.CurrentRow.DataBoundItem;
+                // ViewModel'den Id'yi alıp gerçek ürünü servisten çekiyoruz
+                int selectedId = (int)dgvActive.CurrentRow.Cells["Id"].Value;
+                _selectedProduct = _productService.GetById(selectedId);
+
                 lblSelectedProduct.Text = _selectedProduct.Name;
+                rtbDescription.Text = _selectedProduct.Description ?? "Açıklama yok.";
 
-                // Ürün açıklamasını kontrol edip RichTextBox'a yazıyoruz
-                rtbDescription.Text = string.IsNullOrEmpty(_selectedProduct.Description)
-                                      ? "Bu ürün için bir açıklama girilmemiş."
-                                      : _selectedProduct.Description;
-
-                // Seçilen ürün için mevcut en yüksek teklifi ekrana yazdıralım
                 EnYuksekTeklifiGoster();
+                btnPlaceBid.Enabled = true; // Yeni ürün seçilince butonu aç
+                _auctionTimer.Start(); 
             }
         }
 
@@ -74,16 +128,13 @@ namespace Auction.WinUI
         {
             if (_selectedProduct == null) return;
 
-            // Bu ürüne ait tüm teklifleri çekip fiyata göre azalan sıralıyoruz.
             var allBids = _bidService.GetAll().Where(b => b.ProductId == _selectedProduct.Id).ToList();
             var highestBid = allBids.OrderByDescending(b => b.Amount).FirstOrDefault();
 
             if (highestBid != null)
             {
-                // Teklifi kimin verdiğini kullanıcı servisinden buluyoruz
                 var bidder = _userService.GetById(highestBid.UserId);
                 string bidderName = bidder != null ? $"{bidder.FirstName} {bidder.LastName[0]}." : "Bilinmiyor";
-
                 lblHighBid.Text = $"En Yüksek: {highestBid.Amount} TL - {bidderName}";
             }
             else
@@ -96,19 +147,18 @@ namespace Auction.WinUI
         {
             if (_selectedProduct == null)
             {
-                MessageBox.Show("Lütfen önce bir ürün seçiniz!", "Uyarı");
+                MessageBox.Show("Lütfen önce listeden aktif bir ürün seçiniz!");
                 return;
             }
 
             if (decimal.TryParse(txtBidAmount.Text, out decimal bidAmount))
             {
-                // Mevcut en yüksek fiyatı kontrol ediyoruz (StartingPrice'ı baz alarak)
                 var allBids = _bidService.GetAll().Where(b => b.ProductId == _selectedProduct.Id).ToList();
                 decimal currentMax = allBids.Any() ? allBids.Max(b => b.Amount) : _selectedProduct.StartingPrice;
 
                 if (bidAmount <= currentMax)
                 {
-                    MessageBox.Show($"Teklifiniz {currentMax} TL'den daha yüksek olmalıdır!", "Hata");
+                    MessageBox.Show($"Teklifiniz {currentMax} TL'den yüksek olmalıdır!");
                     return;
                 }
 
@@ -122,22 +172,53 @@ namespace Auction.WinUI
                         UserId = _loggedInUser.Id
                     };
 
-                    _bidService.Add(newBid); // Önce bellekte listeye ekle
-                    _bidService.Save();    // Unit of Work sayesinde veritabanına mühürle!
+                    _bidService.Add(newBid);
+                    _bidService.Save(); // Unit of Work ile kalıcı kayıt
 
-                    MessageBox.Show("Teklifiniz başarıyla kaydedildi!", "Bilgi");
+                    MessageBox.Show("Teklifiniz iletildi!");
                     txtBidAmount.Clear();
+                    UrunleriListele(); // Tabloları anlık güncelle
                     EnYuksekTeklifiGoster();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Teklif kaydedilirken hata: " + ex.Message);
+                    MessageBox.Show("Hata: " + ex.Message);
                 }
             }
-            else
+        }
+
+        // Her saniye çalışan metot
+        private void AuctionTimer_Tick(object sender, EventArgs e)
+        {
+            if (_selectedProduct != null)
             {
-                MessageBox.Show("Lütfen geçerli bir tutar giriniz!", "Uyarı");
+                TimeSpan kalanSure = _selectedProduct.EndDate - DateTime.Now; //
+
+                if (kalanSure.TotalSeconds > 0)
+                {
+                    lblTimer.Text = $"Kalan Süre: {kalanSure.Hours:D2}:{kalanSure.Minutes:D2}:{kalanSure.Seconds:D2}";
+                    lblTimer.ForeColor = Color.Red;
+                }
+                else
+                {
+                    _auctionTimer.Stop();
+                    lblTimer.Text = "MÜZAYEDE BİTTİ!";
+                    btnPlaceBid.Enabled = false; // Teklif vermeyi kapat
+                    UrunleriListele(); // Listeleri tazele
+                }
             }
         }
+    }
+
+    public class ProductViewModel
+    {
+        public int Id { get; set; } // Arka planda lazım ama gizliyoruz
+        public string UrunAdi { get; set; }
+        public string Aciklama { get; set; }
+        public decimal BaslangicFiyati { get; set; }
+        public decimal EnYuksekTeklif { get; set; }
+        public string Kazanan { get; set; } // Sadece bitenlerde görünecek
+        public DateTime AcilisTarihi { get; set; }
+        public DateTime BitisTarihi { get; set; }
     }
 }
