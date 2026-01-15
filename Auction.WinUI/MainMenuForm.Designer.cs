@@ -37,19 +37,17 @@
             // 
             lblWelcome.AutoSize = true;
             lblWelcome.Font = new Font("Verdana", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblWelcome.Location = new Point(255, 176);
-            lblWelcome.Margin = new Padding(5, 0, 5, 0);
+            lblWelcome.Location = new Point(157, 110);
             lblWelcome.Name = "lblWelcome";
-            lblWelcome.Size = new Size(745, 38);
+            lblWelcome.Size = new Size(466, 25);
             lblWelcome.TabIndex = 2;
             lblWelcome.Text = "Online Müzayede Sistemine Hoş Geldiniz";
             // 
             // btnLogin
             // 
-            btnLogin.Location = new Point(336, 277);
-            btnLogin.Margin = new Padding(5, 5, 5, 5);
+            btnLogin.Location = new Point(207, 173);
             btnLogin.Name = "btnLogin";
-            btnLogin.Size = new Size(276, 138);
+            btnLogin.Size = new Size(170, 86);
             btnLogin.TabIndex = 3;
             btnLogin.Text = "Giriş Yap";
             btnLogin.UseVisualStyleBackColor = true;
@@ -57,10 +55,9 @@
             // 
             // btnRegister
             // 
-            btnRegister.Location = new Point(639, 277);
-            btnRegister.Margin = new Padding(5, 5, 5, 5);
+            btnRegister.Location = new Point(393, 173);
             btnRegister.Name = "btnRegister";
-            btnRegister.Size = new Size(276, 138);
+            btnRegister.Size = new Size(170, 86);
             btnRegister.TabIndex = 4;
             btnRegister.Text = "Kayıt Ol";
             btnRegister.UseVisualStyleBackColor = true;
@@ -68,15 +65,14 @@
             // 
             // MainMenuForm
             // 
-            AutoScaleDimensions = new SizeF(13F, 32F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1300, 720);
+            ClientSize = new Size(800, 450);
             Controls.Add(btnRegister);
             Controls.Add(btnLogin);
             Controls.Add(lblWelcome);
-            Margin = new Padding(5, 5, 5, 5);
             Name = "MainMenuForm";
-            Text = "MainMenuForm";
+            Text = "Hoşgeldiniz";
             Load += MainMenuForm_Load;
             ResumeLayout(false);
             PerformLayout();

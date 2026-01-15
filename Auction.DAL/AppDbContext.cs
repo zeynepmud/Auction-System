@@ -9,7 +9,7 @@ namespace Auction.DAL
         // SQL Server bağlantı cümlesi 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=AuctionDb;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;");
+            optionsBuilder.UseSqlServer("Server=DESKTOP-27ISNGQ;Database=AuctionDb;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;");
         }
 
         // Tablolarımız

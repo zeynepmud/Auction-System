@@ -192,23 +192,25 @@ namespace Auction.WinUI
         {
             if (_selectedProduct != null)
             {
-                TimeSpan kalanSure = _selectedProduct.EndDate - DateTime.Now; //
+                // Hedef tarihten şu anki zamanı çıkararak farkı (TimeSpan) buluyoruz
+                TimeSpan kalanSure = _selectedProduct.EndDate - DateTime.Now;
 
                 if (kalanSure.TotalSeconds > 0)
                 {
-                    lblTimer.Text = $"Kalan Süre: {kalanSure.Hours:D2}:{kalanSure.Minutes:D2}:{kalanSure.Seconds:D2}";
+                    // Gün, Saat, Dakika ve Saniye formatını birleştiriyoruz
+                    lblTimer.Text = $"Kalan Süre: {kalanSure.Days} Gün {kalanSure.Hours:D2}:{kalanSure.Minutes:D2}:{kalanSure.Seconds:D2}";
                     lblTimer.ForeColor = Color.Red;
                 }
                 else
                 {
+                    // Süre bittiğinde yapılacak işlemler
                     _auctionTimer.Stop();
                     lblTimer.Text = "MÜZAYEDE BİTTİ!";
-                    btnPlaceBid.Enabled = false; 
-                    UrunleriListele(); 
+                    btnPlaceBid.Enabled = false;
+                    UrunleriListele(); // Listeyi yenileyerek ürünü "Kapananlar" kısmına gönderiyoruz
                 }
             }
         }
-
 
 
         // --- TEKLİFLERİM SEKMESİ İÇİN LİSTELEME MODELİ ---
