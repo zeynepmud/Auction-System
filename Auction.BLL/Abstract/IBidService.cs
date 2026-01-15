@@ -8,7 +8,10 @@ namespace Auction.BLL.Abstract
     {
         void Add(Bid bid);
 
-        //Unit of Work kaydetme emri
+        void Update(Bid entity);
+        void Delete(Bid entity);
+
+     //Unit of Work kaydetme emri
         void Save();
 
         List<Bid> GetAll();

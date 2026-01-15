@@ -30,5 +30,15 @@ namespace Auction.BLL.Concrete
             // Lambda ifadesiyle filtreleme yapıyoruz
             return _bidRepository.GetAll(b => b.ProductId == productId);
         }
+
+        public void Update(Bid entity)
+        {
+            _bidRepository.Update(entity);
+        }
+
+        public void Delete(Bid entity)
+        {
+            _bidRepository.Delete(entity);
+        }
     }
 }

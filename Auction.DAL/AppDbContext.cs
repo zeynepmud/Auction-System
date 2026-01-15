@@ -15,7 +15,7 @@ namespace Auction.DAL
         {
             // TrustServerCertificate=True; sertifika hatasını geçer.
             // Encrypt=False; ise şifreleme zorunluluğunu kaldırır, yerel çalışma için en güvenli yoldur.
-            optionsBuilder.UseSqlServer("Server=DESKTOP-27ISNGQ;Database=AuctionDb;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=AuctionDb;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;");
         }
 
         // Tablolarımız

@@ -15,6 +15,7 @@ namespace Auction.WinUI
         {
             LoginForm login = new LoginForm();
             login.Show();
+            
         }
 
         // Kayıt Ol Butonu
@@ -22,6 +23,7 @@ namespace Auction.WinUI
         {
             RegisterForm register = new RegisterForm();
             register.Show();
+            
         }
     }
 }

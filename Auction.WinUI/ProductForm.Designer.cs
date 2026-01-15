@@ -36,64 +36,73 @@
             dtpEndDate = new DateTimePicker();
             btnProductSave = new Button();
             dgvProducts = new DataGridView();
-            label1 = new Label();
+            Açıklama = new Label();
             txtDescription = new TextBox();
+            Delete = new Button();
+            Update = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
             SuspendLayout();
             // 
             // lblUrunAdi
             // 
             lblUrunAdi.AutoSize = true;
-            lblUrunAdi.Location = new Point(83, 79);
+            lblUrunAdi.Location = new Point(135, 126);
+            lblUrunAdi.Margin = new Padding(5, 0, 5, 0);
             lblUrunAdi.Name = "lblUrunAdi";
-            lblUrunAdi.Size = new Size(74, 20);
+            lblUrunAdi.Size = new Size(120, 32);
             lblUrunAdi.TabIndex = 0;
             lblUrunAdi.Text = "Ürün Adı :";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(39, 113);
+            label2.Location = new Point(63, 181);
+            label2.Margin = new Padding(5, 0, 5, 0);
             label2.Name = "label2";
-            label2.Size = new Size(118, 20);
+            label2.Size = new Size(188, 32);
             label2.TabIndex = 1;
             label2.Text = "Başlangıç Fiyatı :";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(2, 185);
+            label3.Location = new Point(3, 296);
+            label3.Margin = new Padding(5, 0, 5, 0);
             label3.Name = "label3";
-            label3.Size = new Size(155, 20);
+            label3.Size = new Size(251, 32);
             label3.TabIndex = 2;
             label3.Text = "Müzayede Bitiş Tarihi :";
             // 
             // txtName
             // 
-            txtName.Location = new Point(163, 75);
+            txtName.Location = new Point(265, 120);
+            txtName.Margin = new Padding(5);
             txtName.Name = "txtName";
-            txtName.Size = new Size(210, 27);
+            txtName.Size = new Size(339, 39);
             txtName.TabIndex = 3;
             // 
             // txtStartingPrice
             // 
-            txtStartingPrice.Location = new Point(163, 110);
+            txtStartingPrice.Location = new Point(265, 176);
+            txtStartingPrice.Margin = new Padding(5);
             txtStartingPrice.Name = "txtStartingPrice";
-            txtStartingPrice.Size = new Size(210, 27);
+            txtStartingPrice.Size = new Size(339, 39);
             txtStartingPrice.TabIndex = 4;
             // 
             // dtpEndDate
             // 
-            dtpEndDate.Location = new Point(163, 185);
+            dtpEndDate.Location = new Point(265, 296);
+            dtpEndDate.Margin = new Padding(5);
             dtpEndDate.Name = "dtpEndDate";
-            dtpEndDate.Size = new Size(210, 27);
+            dtpEndDate.Size = new Size(339, 39);
             dtpEndDate.TabIndex = 5;
             // 
             // btnProductSave
             // 
-            btnProductSave.Location = new Point(213, 223);
+            btnProductSave.Location = new Point(346, 357);
+            btnProductSave.Margin = new Padding(5);
             btnProductSave.Name = "btnProductSave";
-            btnProductSave.Size = new Size(94, 29);
+            btnProductSave.Size = new Size(153, 46);
             btnProductSave.TabIndex = 6;
             btnProductSave.Text = "Kaydet";
             btnProductSave.UseVisualStyleBackColor = true;
@@ -102,37 +111,63 @@
             // dgvProducts
             // 
             dgvProducts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvProducts.Location = new Point(425, 64);
+            dgvProducts.Location = new Point(691, 102);
+            dgvProducts.Margin = new Padding(5);
             dgvProducts.Name = "dgvProducts";
             dgvProducts.RowHeadersWidth = 51;
-            dgvProducts.Size = new Size(300, 188);
+            dgvProducts.Size = new Size(488, 301);
             dgvProducts.TabIndex = 7;
+            dgvProducts.CellClick += dgvProducts_CellClick;
             // 
-            // label1
+            // Açıklama
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(83, 154);
-            label1.Name = "label1";
-            label1.Size = new Size(50, 20);
-            label1.TabIndex = 8;
-            label1.Text = "label1";
+            Açıklama.AutoSize = true;
+            Açıklama.Location = new Point(135, 246);
+            Açıklama.Margin = new Padding(5, 0, 5, 0);
+            Açıklama.Name = "Açıklama";
+            Açıklama.Size = new Size(109, 32);
+            Açıklama.TabIndex = 8;
+            Açıklama.Text = "Açıklama";
             // 
             // txtDescription
             // 
-            txtDescription.Location = new Point(163, 147);
+            txtDescription.Location = new Point(265, 235);
+            txtDescription.Margin = new Padding(5);
             txtDescription.Multiline = true;
             txtDescription.Name = "txtDescription";
             txtDescription.ScrollBars = ScrollBars.Vertical;
-            txtDescription.Size = new Size(210, 34);
+            txtDescription.Size = new Size(339, 52);
             txtDescription.TabIndex = 9;
+            // 
+            // Delete
+            // 
+            Delete.Location = new Point(198, 429);
+            Delete.Name = "Delete";
+            Delete.Size = new Size(148, 46);
+            Delete.TabIndex = 10;
+            Delete.Text = "Sil";
+            Delete.UseVisualStyleBackColor = true;
+            Delete.Click += Delete_Click;
+            // 
+            // Update
+            // 
+            Update.Location = new Point(492, 429);
+            Update.Name = "Update";
+            Update.Size = new Size(147, 46);
+            Update.TabIndex = 11;
+            Update.Text = "Güncelle";
+            Update.UseVisualStyleBackColor = true;
+            Update.Click += Update_Click;
             // 
             // ProductForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1300, 720);
+            Controls.Add(Update);
+            Controls.Add(Delete);
             Controls.Add(txtDescription);
-            Controls.Add(label1);
+            Controls.Add(Açıklama);
             Controls.Add(dgvProducts);
             Controls.Add(btnProductSave);
             Controls.Add(dtpEndDate);
@@ -141,6 +176,7 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(lblUrunAdi);
+            Margin = new Padding(5);
             Name = "ProductForm";
             Text = "Ürün Yönetim Ekranı";
             ((System.ComponentModel.ISupportInitialize)dgvProducts).EndInit();
@@ -160,5 +196,8 @@
         private DataGridView dgvProducts;
         private Label label1;
         private TextBox txtDescription;
+        private Label Açıklama;
+        private Button Delete;
+        private Button Update;
     }
 }
