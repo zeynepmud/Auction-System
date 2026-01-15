@@ -141,7 +141,7 @@
             Controls.Add(txtLastName);
             Controls.Add(txtFirstName);
             Name = "RegisterForm";
-            Text = "Kullanıcı Kayıt ve Yönetim Paneli";
+            Text = "Kullanıcı Kayıt";
             ResumeLayout(false);
             PerformLayout();
         }

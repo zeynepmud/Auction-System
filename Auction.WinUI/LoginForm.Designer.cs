@@ -38,47 +38,42 @@
             // 
             // txtEmail
             // 
-            txtEmail.Location = new Point(502, 192);
-            txtEmail.Margin = new Padding(5, 5, 5, 5);
+            txtEmail.Location = new Point(309, 120);
             txtEmail.Name = "txtEmail";
-            txtEmail.Size = new Size(313, 39);
+            txtEmail.Size = new Size(194, 27);
             txtEmail.TabIndex = 0;
             // 
             // txtPassword
             // 
-            txtPassword.Location = new Point(502, 267);
-            txtPassword.Margin = new Padding(5, 5, 5, 5);
+            txtPassword.Location = new Point(309, 167);
             txtPassword.Name = "txtPassword";
-            txtPassword.Size = new Size(313, 39);
+            txtPassword.Size = new Size(194, 27);
             txtPassword.TabIndex = 1;
             txtPassword.UseSystemPasswordChar = true;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(388, 197);
-            label1.Margin = new Padding(5, 0, 5, 0);
+            label1.Location = new Point(239, 123);
             label1.Name = "label1";
-            label1.Size = new Size(106, 32);
+            label1.Size = new Size(67, 20);
             label1.TabIndex = 2;
             label1.Text = "E-posta :";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(422, 272);
-            label2.Margin = new Padding(5, 0, 5, 0);
+            label2.Location = new Point(260, 170);
             label2.Name = "label2";
-            label2.Size = new Size(74, 32);
+            label2.Size = new Size(46, 20);
             label2.TabIndex = 3;
             label2.Text = "Şifre :";
             // 
             // btnLogin
             // 
-            btnLogin.Location = new Point(502, 344);
-            btnLogin.Margin = new Padding(5, 5, 5, 5);
+            btnLogin.Location = new Point(309, 215);
             btnLogin.Name = "btnLogin";
-            btnLogin.Size = new Size(153, 46);
+            btnLogin.Size = new Size(94, 29);
             btnLogin.TabIndex = 4;
             btnLogin.Text = "Giriş Yap";
             btnLogin.UseVisualStyleBackColor = true;
@@ -86,10 +81,9 @@
             // 
             // button1
             // 
-            button1.Location = new Point(665, 344);
-            button1.Margin = new Padding(5, 5, 5, 5);
+            button1.Location = new Point(409, 215);
             button1.Name = "button1";
-            button1.Size = new Size(153, 46);
+            button1.Size = new Size(94, 29);
             button1.TabIndex = 5;
             button1.Text = "Temizle";
             button1.UseVisualStyleBackColor = true;
@@ -97,18 +91,17 @@
             // 
             // LoginForm
             // 
-            AutoScaleDimensions = new SizeF(13F, 32F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1300, 720);
+            ClientSize = new Size(800, 450);
             Controls.Add(button1);
             Controls.Add(btnLogin);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(txtPassword);
             Controls.Add(txtEmail);
-            Margin = new Padding(5, 5, 5, 5);
             Name = "LoginForm";
-            Text = "LoginForm";
+            Text = "Giriş";
             ResumeLayout(false);
             PerformLayout();
         }
