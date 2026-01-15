@@ -26,11 +26,8 @@ namespace Auction.WinUI
         private void dgvProducts_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dgvProducts.CurrentRow != null)
-            {
-                // Grid'den seçilen satırı nesneye çeviriyoruz
-                _selectedProduct = (Product)dgvProducts.CurrentRow.DataBoundItem;
-
-                // Kutucukları dolduruyoruz
+            {              
+                _selectedProduct = (Product)dgvProducts.CurrentRow.DataBoundItem;            
                 txtName.Text = _selectedProduct.Name;
                 txtStartingPrice.Text = _selectedProduct.StartingPrice.ToString();
                 txtDescription.Text = _selectedProduct.Description;
@@ -49,6 +46,7 @@ namespace Auction.WinUI
             dgvProducts.DataSource = _productService.GetAll();
         }
 
+        //--kaydetme butonu --
         private void btnProductSave_Click(object sender, EventArgs e)
         {
             try
@@ -81,10 +79,9 @@ namespace Auction.WinUI
                 MessageBox.Show("Hata: " + ex.Message);
             }
         }
-
+        //--Silme butonu--
         private void Delete_Click(object sender, EventArgs e)
         {
-            // Eğer tablodan bir ürün seçilmemişse boşuna işlem yapmayalım
             if (_selectedProduct != null)
             {
                 var result = MessageBox.Show($"{_selectedProduct.Name} isimli ürünü silmek istediğinize emin misiniz?", "Silme Onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -93,11 +90,11 @@ namespace Auction.WinUI
                 {
                     try
                     {
-                        _productService.Delete(_selectedProduct); // Önce silinecek olarak işaretle
-                        _productService.Save();                    // Unit of Work ile veritabanına uygula
+                        _productService.Delete(_selectedProduct); 
+                        _productService.Save();                    
 
                         MessageBox.Show("Ürün başarıyla silindi.", "Bilgi");
-                        TemizleVeListele(); // Tabloyu tazele ve kutucukları boşalt
+                        TemizleVeListele(); 
                     }
                     catch (Exception ex)
                     {
@@ -130,25 +127,18 @@ namespace Auction.WinUI
 
         // --- YARDIMCI METOT: EKRANI SIFIRLAR VE LİSTEYİ TAZELEMEZ ---
         private void TemizleVeListele()
-        {
-            // 1. Tüm TextBox'ları temizle
+        {           
             txtName.Clear();
             txtStartingPrice.Clear();
-            txtDescription.Clear();
-
-            // 2. Tarihi bugüne çek
-            dtpEndDate.Value = DateTime.Now;
-
-            // 3. Seçili olan ürünü hafızadan sil (Hata almamak için kritik!)
+            txtDescription.Clear();         
+            dtpEndDate.Value = DateTime.Now;           
             _selectedProduct = null;
-
-            // 4. Tabloyu (DataGridView) veritabanındaki güncel verilerle yenile
             UrunListele();
         }
 
         private void çıkışYapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // 1. Kullanıcıya soruyoruz
+            
             DialogResult result = MessageBox.Show(
                 "Çıkış yapmak istediğinize emin misiniz?",
                 "Çıkış Onayı",
@@ -156,11 +146,9 @@ namespace Auction.WinUI
                 MessageBoxIcon.Question
             );
 
-            // 2. Eğer "Evet" derse uygulamayı kapat veya Login ekranına dön
+            
             if (result == DialogResult.Yes)
             {
-
-                // Not: Eğer sadece Login formuna dönmek istersen şu yolu izleyebilirsin:
                 this.Close();
                 var loginForm = new LoginForm();
                 loginForm.Show();

@@ -50,6 +50,7 @@
             menuStrip1 = new MenuStrip();
             işlemlerToolStripMenuItem = new ToolStripMenuItem();
             çıkışYapToolStripMenuItem = new ToolStripMenuItem();
+            pnlBidding = new Panel();
             tabPageMyBids.SuspendLayout();
             tabActive.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvActive).BeginInit();
@@ -58,6 +59,7 @@
             tabMyBids.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvMyBids).BeginInit();
             menuStrip1.SuspendLayout();
+            pnlBidding.SuspendLayout();
             SuspendLayout();
             // 
             // lblWelcomeUser
@@ -75,7 +77,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 12F);
-            label1.Location = new Point(159, 786);
+            label1.Location = new Point(44, 143);
             label1.Margin = new Padding(5, 0, 5, 0);
             label1.Name = "label1";
             label1.Size = new Size(196, 45);
@@ -86,7 +88,7 @@
             // 
             lblSelectedProduct.AutoSize = true;
             lblSelectedProduct.Font = new Font("Segoe UI", 12F);
-            lblSelectedProduct.Location = new Point(348, 786);
+            lblSelectedProduct.Location = new Point(228, 142);
             lblSelectedProduct.Margin = new Padding(5, 0, 5, 0);
             lblSelectedProduct.Name = "lblSelectedProduct";
             lblSelectedProduct.Size = new Size(0, 45);
@@ -96,7 +98,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F);
-            label2.Location = new Point(856, 859);
+            label2.Location = new Point(804, 143);
             label2.Margin = new Padding(5, 0, 5, 0);
             label2.Name = "label2";
             label2.Size = new Size(166, 45);
@@ -105,7 +107,7 @@
             // 
             // txtBidAmount
             // 
-            txtBidAmount.Location = new Point(1014, 866);
+            txtBidAmount.Location = new Point(966, 149);
             txtBidAmount.Margin = new Padding(5);
             txtBidAmount.Name = "txtBidAmount";
             txtBidAmount.Size = new Size(201, 39);
@@ -115,10 +117,10 @@
             // 
             btnPlaceBid.BackColor = Color.FromArgb(0, 192, 0);
             btnPlaceBid.ForeColor = SystemColors.ButtonFace;
-            btnPlaceBid.Location = new Point(1045, 918);
+            btnPlaceBid.Location = new Point(813, 221);
             btnPlaceBid.Margin = new Padding(5);
             btnPlaceBid.Name = "btnPlaceBid";
-            btnPlaceBid.Size = new Size(153, 46);
+            btnPlaceBid.Size = new Size(166, 61);
             btnPlaceBid.TabIndex = 6;
             btnPlaceBid.Text = "Teklif Ver";
             btnPlaceBid.UseVisualStyleBackColor = false;
@@ -128,7 +130,7 @@
             // 
             lblHighBid.AutoSize = true;
             lblHighBid.Font = new Font("Segoe UI", 12F);
-            lblHighBid.Location = new Point(772, 787);
+            lblHighBid.Location = new Point(804, 46);
             lblHighBid.Margin = new Padding(5, 0, 5, 0);
             lblHighBid.Name = "lblHighBid";
             lblHighBid.Size = new Size(273, 45);
@@ -137,11 +139,11 @@
             // 
             // rtbDescription
             // 
-            rtbDescription.Location = new Point(159, 866);
+            rtbDescription.Location = new Point(44, 192);
             rtbDescription.Margin = new Padding(5);
             rtbDescription.Name = "rtbDescription";
             rtbDescription.ReadOnly = true;
-            rtbDescription.Size = new Size(581, 190);
+            rtbDescription.Size = new Size(533, 90);
             rtbDescription.TabIndex = 8;
             rtbDescription.Text = "";
             // 
@@ -159,7 +161,7 @@
             tabPageMyBids.Size = new Size(1402, 525);
             tabPageMyBids.TabIndex = 9;
             tabPageMyBids.Tag = "";
-            tabPageMyBids.SelectedIndexChanged += tabPageMyBids_SelectedIndexChanged;
+            tabPageMyBids.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
             // 
             // tabActive
             // 
@@ -252,7 +254,7 @@
             // dgvMyBids
             // 
             dgvMyBids.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvMyBids.Location = new Point(3, 0);
+            dgvMyBids.Location = new Point(-8, 0);
             dgvMyBids.Name = "dgvMyBids";
             dgvMyBids.RowHeadersWidth = 82;
             dgvMyBids.Size = new Size(1391, 331);
@@ -265,7 +267,7 @@
             lblTimer.BackColor = Color.White;
             lblTimer.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
             lblTimer.ForeColor = Color.Red;
-            lblTimer.Location = new Point(158, 696);
+            lblTimer.Location = new Point(54, 15);
             lblTimer.Margin = new Padding(5, 0, 5, 0);
             lblTimer.Name = "lblTimer";
             lblTimer.Size = new Size(0, 72);
@@ -277,7 +279,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { işlemlerToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1874, 42);
+            menuStrip1.Size = new Size(1874, 40);
             menuStrip1.TabIndex = 11;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -285,15 +287,30 @@
             // 
             işlemlerToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { çıkışYapToolStripMenuItem });
             işlemlerToolStripMenuItem.Name = "işlemlerToolStripMenuItem";
-            işlemlerToolStripMenuItem.Size = new Size(117, 38);
+            işlemlerToolStripMenuItem.Size = new Size(117, 36);
             işlemlerToolStripMenuItem.Text = "İşlemler";
             // 
             // çıkışYapToolStripMenuItem
             // 
             çıkışYapToolStripMenuItem.Name = "çıkışYapToolStripMenuItem";
-            çıkışYapToolStripMenuItem.Size = new Size(359, 44);
+            çıkışYapToolStripMenuItem.Size = new Size(240, 44);
             çıkışYapToolStripMenuItem.Text = "Çıkış Yap";
             çıkışYapToolStripMenuItem.Click += çıkışYapToolStripMenuItem_Click;
+            // 
+            // pnlBidding
+            // 
+            pnlBidding.Controls.Add(label1);
+            pnlBidding.Controls.Add(lblTimer);
+            pnlBidding.Controls.Add(rtbDescription);
+            pnlBidding.Controls.Add(lblHighBid);
+            pnlBidding.Controls.Add(lblSelectedProduct);
+            pnlBidding.Controls.Add(btnPlaceBid);
+            pnlBidding.Controls.Add(label2);
+            pnlBidding.Controls.Add(txtBidAmount);
+            pnlBidding.Location = new Point(172, 712);
+            pnlBidding.Name = "pnlBidding";
+            pnlBidding.Size = new Size(1403, 319);
+            pnlBidding.TabIndex = 12;
             // 
             // BiddingHallForm
             // 
@@ -301,15 +318,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
             ClientSize = new Size(1874, 1086);
-            Controls.Add(lblTimer);
+            Controls.Add(pnlBidding);
             Controls.Add(tabPageMyBids);
-            Controls.Add(rtbDescription);
-            Controls.Add(lblHighBid);
-            Controls.Add(btnPlaceBid);
-            Controls.Add(txtBidAmount);
-            Controls.Add(label2);
-            Controls.Add(lblSelectedProduct);
-            Controls.Add(label1);
             Controls.Add(lblWelcomeUser);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
@@ -327,6 +337,8 @@
             ((System.ComponentModel.ISupportInitialize)dgvMyBids).EndInit();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            pnlBidding.ResumeLayout(false);
+            pnlBidding.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -355,5 +367,6 @@
         private MenuStrip menuStrip1;
         private ToolStripMenuItem işlemlerToolStripMenuItem;
         private ToolStripMenuItem çıkışYapToolStripMenuItem;
+        private Panel pnlBidding;
     }
 }

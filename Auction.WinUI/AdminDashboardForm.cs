@@ -69,7 +69,8 @@ namespace Auction.WinUI
 
                 // 2. KULLANICI YÖNETİMİ TABLOSU (Sekme 1)
                 dgvUsers.DataSource = null;
-                dgvUsers.DataSource = tumKullanicilar.Select(u => new {
+                dgvUsers.DataSource = tumKullanicilar.Select(u => new
+                {
                     u.Id,
                     Ad = u.FirstName,
                     Soyad = u.LastName,
@@ -81,7 +82,8 @@ namespace Auction.WinUI
                 dgvHistory.DataSource = null;
                 dgvHistory.DataSource = tumUrunler
                     .Where(p => p.EndDate <= DateTime.Now)
-                    .Select(p => new {
+                    .Select(p => new
+                    {
                         p.Id,
                         UrunAdi = p.Name,
                         BaslangicFiyati = p.StartingPrice,
@@ -95,7 +97,8 @@ namespace Auction.WinUI
                     dgvActiveMonitor.DataSource = null;
                     dgvActiveMonitor.DataSource = tumUrunler
                         .Where(p => p.EndDate > DateTime.Now)
-                        .Select(p => new {
+                        .Select(p => new
+                        {
                             p.Id,
                             UrunAdi = p.Name,
                             BitisTarihi = p.EndDate,
@@ -109,9 +112,8 @@ namespace Auction.WinUI
             }
         }
 
-        /// <summary>
-        /// Seçilen ürünün tekliflerini, kullanıcı isimleriyle beraber getiren yardımcı metot.
-        /// </summary>
+        
+        // Seçilen ürünün tekliflerini, kullanıcı isimleriyle beraber getiren yardımcı metot.
         private void TeklifDetaylariniGetir(int productId, DataGridView hedefGrid)
         {
             // ID yerine isim göstermek için kullanıcı sözlüğü oluşturuyoruz.
@@ -120,7 +122,8 @@ namespace Auction.WinUI
             hedefGrid.DataSource = _bidService.GetAll()
                 .Where(b => b.ProductId == productId)
                 .OrderByDescending(b => b.Amount)
-                .Select(b => new {
+                .Select(b => new
+                {
                     Teklif = b.Amount, // "Tutar" yerine "Teklif"
                     Zaman = b.BidTime,
                     Kullanici = kullaniciSozlugu.ContainsKey(b.UserId) ? kullaniciSozlugu[b.UserId] : "Bilinmiyor"
@@ -191,6 +194,27 @@ namespace Auction.WinUI
             ProductForm frm = new ProductForm();
             frm.ShowDialog();
             TumVerileriTazele();
+        }
+
+        private void çıkışYapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            DialogResult result = MessageBox.Show(
+                "Çıkış yapmak istediğinize emin misiniz?",
+                "Çıkış Onayı",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            
+            if (result == DialogResult.Yes)
+            {
+
+                
+                this.Close();
+                var loginForm = new LoginForm();
+                loginForm.Show();
+            }
         }
     }
 }

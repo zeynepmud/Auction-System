@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Data;
-using System.Linq;
-using System.Windows.Forms;
 using Auction.BLL.Abstract;
 using Auction.BLL.Concrete;
 using Auction.DAL.Abstract;
@@ -37,7 +34,7 @@ namespace Auction.WinUI
             // Timer ayarları
             _auctionTimer = new System.Windows.Forms.Timer();
             _auctionTimer.Interval = 1000; // 1 saniyede bir çalış
-            _auctionTimer.Tick += AuctionTimer_Tick; // Her saniye ne yapacağını söyleyen metot
+            _auctionTimer.Tick += AuctionTimer_Tick; 
 
         }
 
@@ -55,7 +52,7 @@ namespace Auction.WinUI
             var tumUrunler = _productService.GetAll();
             var simdi = DateTime.Now;
 
-            // 1. AKTİF MÜZAYEDELERİ FİLTRELE VE DOLDUR
+            // AKTİF MÜZAYEDELERİ FİLTRELE VE DOLDUR
             var aktifListesi = tumUrunler
                 .Where(p => p.EndDate > simdi)
                 .Select(p => new ProductViewModel
@@ -73,10 +70,10 @@ namespace Auction.WinUI
                 }).ToList();
 
             dgvActive.DataSource = aktifListesi;
-            dgvActive.Columns["Id"].Visible = false; // Id gizlensin
-            dgvActive.Columns["Kazanan"].Visible = false; // Aktiflerde kazanan sütunu görünmesin
+            dgvActive.Columns["Id"].Visible = false; 
+            dgvActive.Columns["Kazanan"].Visible = false; 
 
-            // 2. KAPANAN MÜZAYEDELERİ FİLTRELE VE DOLDUR
+            //KAPANAN MÜZAYEDELERİ FİLTRELE VE DOLDUR
             var kapananListesi = tumUrunler
                 .Where(p => p.EndDate <= simdi)
                 .Select(p =>
@@ -98,7 +95,7 @@ namespace Auction.WinUI
                         Aciklama = p.Description,
                         BaslangicFiyati = p.StartingPrice,
                         EnYuksekTeklif = enYuksekBid?.Amount ?? 0,
-                        Kazanan = kazananKisi, // Kazananın adı burada
+                        Kazanan = kazananKisi, 
                         AcilisTarihi = p.CreatedDate,
                         BitisTarihi = p.EndDate
                     };
@@ -113,7 +110,7 @@ namespace Auction.WinUI
         {
             if (dgvActive.CurrentRow != null)
             {
-                // ViewModel'den Id'yi alıp gerçek ürünü servisten çekiyoruz
+                
                 int selectedId = (int)dgvActive.CurrentRow.Cells["Id"].Value;
                 _selectedProduct = _productService.GetById(selectedId);
 
@@ -121,7 +118,7 @@ namespace Auction.WinUI
                 rtbDescription.Text = _selectedProduct.Description ?? "Açıklama yok.";
 
                 EnYuksekTeklifiGoster();
-                btnPlaceBid.Enabled = true; // Yeni ürün seçilince butonu aç
+                btnPlaceBid.Enabled = true; 
                 _auctionTimer.Start();
             }
         }
@@ -179,7 +176,7 @@ namespace Auction.WinUI
 
                     MessageBox.Show("Teklifiniz iletildi!");
                     txtBidAmount.Clear();
-                    UrunleriListele(); // Tabloları anlık güncelle
+                    UrunleriListele(); 
                     EnYuksekTeklifiGoster();
                     TekliflerimiListele();
                 }
@@ -207,8 +204,8 @@ namespace Auction.WinUI
                 {
                     _auctionTimer.Stop();
                     lblTimer.Text = "MÜZAYEDE BİTTİ!";
-                    btnPlaceBid.Enabled = false; // Teklif vermeyi kapat
-                    UrunleriListele(); // Listeleri tazele
+                    btnPlaceBid.Enabled = false; 
+                    UrunleriListele(); 
                 }
             }
         }
@@ -216,7 +213,7 @@ namespace Auction.WinUI
 
 
         // --- TEKLİFLERİM SEKMESİ İÇİN LİSTELEME MODELİ ---
-        private Bid? _selectedMyBid; // Seçilen teklifi tutacak
+        private Bid? _selectedMyBid; 
 
         private void TekliflerimiListele()
         {
@@ -232,7 +229,7 @@ namespace Auction.WinUI
                         UrunAdi = product.Name,
                         Teklifim = b.Amount,
                         BitisTarihi = product.EndDate,
-                        Durum = product.EndDate > DateTime.Now ? "Devam Ediyor" : "Bitti"
+                        Durum = (b.Product.EndDate > DateTime.Now) ? "Aktif" : "Müzayede Bitti"
                     };
                 }).ToList();
 
@@ -249,36 +246,51 @@ namespace Auction.WinUI
                 if (result == DialogResult.Yes)
                 {
                     _bidService.Delete(_selectedMyBid);
-                    _bidService.Save(); // UoW ile kaydet
+                    _bidService.Save();
                     MessageBox.Show("Teklifiniz silindi.");
-                    TekliflerimiListele(); // Listeyi tazele
-                    UrunleriListele(); // Ana ürün listesini de güncelle (en yüksek teklif değişmiş olabilir)
+                    TekliflerimiListele(); 
+                    UrunleriListele();
                 }
             }
         }
 
         private void btnMyBidUpdate_Click(object sender, EventArgs e)
         {
-            if (_selectedMyBid != null && decimal.TryParse(txtMyBidAmount.Text, out decimal newAmount))
+            if (_selectedMyBid != null)
             {
-                // Burada istersen "yeni tutar mevcut en yüksekten küçük olamaz" kontrolü ekleyebilirsin
-                _selectedMyBid.Amount = newAmount;
-                _selectedMyBid.BidTime = DateTime.Now;
+                var product = _productService.GetById(_selectedMyBid.ProductId);
 
-                _bidService.Update(_selectedMyBid);
-                _bidService.Save();
-                MessageBox.Show("Teklifiniz güncellendi.");
-                TekliflerimiListele();
-                UrunleriListele();
+                // KONTROL: Süre bittiyse silmeyi engelle
+                if (product != null && product.EndDate < DateTime.Now)
+                {
+                    MessageBox.Show("Süresi dolmuş bir müzayededen teklifinizi geri çekemezsiniz!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var result = MessageBox.Show("Teklifinizi çekmek istediğinize emin misiniz?", "Onay", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    _bidService.Delete(_selectedMyBid);
+                    _bidService.Save();
+                    MessageBox.Show("Teklifiniz silindi.");
+                    TekliflerimiListele();
+                    UrunleriListele();
+                }
             }
         }
 
         private void tabPageMyBids_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Kullanıcı "Tekliflerim" sekmesine (3. sekme, yani index 2) geçtiyse listeyi yenile
-            if (tabPageMyBids.SelectedIndex == 2)
-            {
-                TekliflerimiListele();
+            // tabControl1 ismini kendi TabControl isminle değiştir
+            var tc = sender as TabControl;
+
+            if (tc != null)
+            {              
+                pnlBidding.Visible = (tc.SelectedIndex == 0);
+                if (tc.SelectedIndex == 2)
+                {
+                    TekliflerimiListele();
+                }
             }
         }
 
@@ -286,23 +298,34 @@ namespace Auction.WinUI
         {
             if (dgvMyBids.CurrentRow != null && e.RowIndex >= 0)
             {
-                // ID'yi yakalıyoruz
+                
                 int selectedBidId = (int)dgvMyBids.CurrentRow.Cells["BidId"].Value;
 
-                // Servis üzerinden teklifi buluyoruz
+                
                 _selectedMyBid = _bidService.GetAll().FirstOrDefault(x => x.Id == selectedBidId);
 
-                // Kutucuğa yazdırıyoruz
+                
                 if (_selectedMyBid != null)
                 {
                     txtMyBidAmount.Text = _selectedMyBid.Amount.ToString();
                 }
             }
+            var product = _productService.GetById(_selectedMyBid.ProductId);
+            if (product != null && product.EndDate < DateTime.Now)
+            {
+                btnMyBidUpdate.Enabled = false; // Butonu gri yapar ve tıklanamaz hale getirir
+                btnMyBidDelete.Enabled = false;
+            }
+            else
+            {
+                btnMyBidUpdate.Enabled = true;
+                btnMyBidDelete.Enabled = true;
+            }
         }
 
         private void çıkışYapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // 1. Kullanıcıya soruyoruz
+            
             DialogResult result = MessageBox.Show(
                 "Çıkış yapmak istediğinize emin misiniz?",
                 "Çıkış Onayı",
@@ -310,14 +333,37 @@ namespace Auction.WinUI
                 MessageBoxIcon.Question
             );
 
-            // 2. Eğer "Evet" derse uygulamayı kapat veya Login ekranına dön
+            
             if (result == DialogResult.Yes)
             {
 
-                // Not: Eğer sadece Login formuna dönmek istersen şu yolu izleyebilirsin:
+               
                  this.Close(); 
                  var loginForm = new LoginForm(); 
                  loginForm.Show();
+            }
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+            var tc = sender as TabControl;
+
+            if (tc != null)
+            {
+                
+                if (tc.SelectedIndex == 0)
+                {
+                    pnlBidding.Visible = true;
+                }
+                else
+                {
+                    
+                    pnlBidding.Visible = false;
+
+                    if (_auctionTimer != null)
+                        _auctionTimer.Stop(); 
+                }
             }
         }
     }
@@ -337,7 +383,7 @@ namespace Auction.WinUI
 
     public class MyBidViewModel
     {
-        public int BidId { get; set; } // Arka planda silme/güncelleme için lazım
+        public int BidId { get; set; } 
         public string UrunAdi { get; set; }
         public decimal Teklifim { get; set; }
         public DateTime BitisTarihi { get; set; }
