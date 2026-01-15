@@ -145,5 +145,26 @@ namespace Auction.WinUI
             // 4. Tabloyu (DataGridView) veritabanındaki güncel verilerle yenile
             UrunListele();
         }
+
+        private void çıkışYapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // 1. Kullanıcıya soruyoruz
+            DialogResult result = MessageBox.Show(
+                "Çıkış yapmak istediğinize emin misiniz?",
+                "Çıkış Onayı",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            // 2. Eğer "Evet" derse uygulamayı kapat veya Login ekranına dön
+            if (result == DialogResult.Yes)
+            {
+
+                // Not: Eğer sadece Login formuna dönmek istersen şu yolu izleyebilirsin:
+                this.Close();
+                var loginForm = new LoginForm();
+                loginForm.Show();
+            }
+        }
     }
 }

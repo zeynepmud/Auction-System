@@ -40,7 +40,11 @@
             txtDescription = new TextBox();
             Delete = new Button();
             Update = new Button();
+            menuStrip1 = new MenuStrip();
+            işlemlerToolStripMenuItem = new ToolStripMenuItem();
+            çıkışYapToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // lblUrunAdi
@@ -159,6 +163,30 @@
             Update.UseVisualStyleBackColor = true;
             Update.Click += Update_Click;
             // 
+            // menuStrip1
+            // 
+            menuStrip1.ImageScalingSize = new Size(32, 32);
+            menuStrip1.Items.AddRange(new ToolStripItem[] { işlemlerToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1300, 42);
+            menuStrip1.TabIndex = 12;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // işlemlerToolStripMenuItem
+            // 
+            işlemlerToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { çıkışYapToolStripMenuItem });
+            işlemlerToolStripMenuItem.Name = "işlemlerToolStripMenuItem";
+            işlemlerToolStripMenuItem.Size = new Size(117, 38);
+            işlemlerToolStripMenuItem.Text = "İşlemler";
+            // 
+            // çıkışYapToolStripMenuItem
+            // 
+            çıkışYapToolStripMenuItem.Name = "çıkışYapToolStripMenuItem";
+            çıkışYapToolStripMenuItem.Size = new Size(359, 44);
+            çıkışYapToolStripMenuItem.Text = "Çıkış yap";
+            çıkışYapToolStripMenuItem.Click += çıkışYapToolStripMenuItem_Click;
+            // 
             // ProductForm
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
@@ -176,10 +204,14 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(lblUrunAdi);
+            Controls.Add(menuStrip1);
+            MainMenuStrip = menuStrip1;
             Margin = new Padding(5);
             Name = "ProductForm";
             Text = "Ürün Yönetim Ekranı";
             ((System.ComponentModel.ISupportInitialize)dgvProducts).EndInit();
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -199,5 +231,8 @@
         private Label Açıklama;
         private Button Delete;
         private Button Update;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem işlemlerToolStripMenuItem;
+        private ToolStripMenuItem çıkışYapToolStripMenuItem;
     }
 }
