@@ -1,4 +1,9 @@
-﻿using Auction.BLL.Abstract;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Windows.Forms;
+using Auction.BLL.Abstract;
 using Auction.BLL.Concrete;
 using Auction.DAL.Abstract;
 using Auction.DAL.Concrete;
@@ -14,8 +19,7 @@ namespace Auction.WinUI
         {
             InitializeComponent();
 
-            // --- SOLID UYUMU ---
-            // Tek bir context üzerinden servisleri bağlıyoruz.
+            // --- SOLID & UNIT OF WORK UYUMU ---
             var context = new Auction.DAL.AppDbContext();
             IUnitOfWork uow = new UnitOfWork(context);
             _userService = new UserService(new EfRepositoryBase<User>(context), uow);
@@ -32,35 +36,49 @@ namespace Auction.WinUI
                     LastName = "Yöneticisi",
                     Email = "admin@auction.com",
                     Password = "admin",
-                    Role = "Admin"
+                    Role = "Admin",
+                    IsActive = true // Admin hesabı varsayılan olarak aktif olmalı
                 });
-                _userService.Save(); // Ekledikten sonra kaydettik
+                _userService.Save();
             }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            // Kullanıcıyı veritabanında mail ve şifreyle sorguluyoruz
+            // 1. Kullanıcıyı mail ve şifreyle buluyoruz
             var user = _userService.GetAll()
                 .FirstOrDefault(u => u.Email == txtEmail.Text && u.Password == txtPassword.Text);
 
             if (user != null)
             {
+                // --- KRİTİK GÜVENLİK KONTROLÜ (ISACTIVE) ---
+                // Admin panelinden askıya alınan kullanıcı girişi burada engellenir.
+                if (!user.IsActive)
+                {
+                    MessageBox.Show("Hesabınız yönetici tarafından dondurulmuştur. Giriş yapamazsınız.",
+                                    "Erişim Engellendi", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    return; // İşlemi bitir, formları açma
+                }
+
                 MessageBox.Show($"Hoş geldin, {user.FirstName}!");
 
+                // 2. ROL TABANLI YÖNLENDİRME
                 if (user.Role == "Admin")
                 {
-                    new ProductForm().Show(); // Adminse ürün ekleme paneli
+                    // Adminse hazırladığımız yeni Dashboard açılıyor
+                    new AdminDashboardForm().Show();
                 }
                 else
                 {
-                    new BiddingHallForm(user).Show(); // Alıcıysa müzayede salonu
+                    // Standart kullanıcıysa müzayede salonu açılıyor
+                    new BiddingHallForm(user).Show();
                 }
-                this.Hide();
+
+                this.Hide(); // Giriş formunu gizle
             }
             else
             {
-                MessageBox.Show("E-posta veya şifre hatalı!", "Hata");
+                MessageBox.Show("E-posta veya şifre hatalı!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
