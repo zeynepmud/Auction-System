@@ -50,59 +50,66 @@
             // lblUrunAdi
             // 
             lblUrunAdi.AutoSize = true;
-            lblUrunAdi.Location = new Point(83, 79);
+            lblUrunAdi.Location = new Point(135, 126);
+            lblUrunAdi.Margin = new Padding(5, 0, 5, 0);
             lblUrunAdi.Name = "lblUrunAdi";
-            lblUrunAdi.Size = new Size(74, 20);
+            lblUrunAdi.Size = new Size(120, 32);
             lblUrunAdi.TabIndex = 0;
             lblUrunAdi.Text = "Ürün Adı :";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(39, 113);
+            label2.Location = new Point(63, 181);
+            label2.Margin = new Padding(5, 0, 5, 0);
             label2.Name = "label2";
-            label2.Size = new Size(118, 20);
+            label2.Size = new Size(188, 32);
             label2.TabIndex = 1;
             label2.Text = "Başlangıç Fiyatı :";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(2, 185);
+            label3.Location = new Point(3, 296);
+            label3.Margin = new Padding(5, 0, 5, 0);
             label3.Name = "label3";
-            label3.Size = new Size(155, 20);
+            label3.Size = new Size(251, 32);
             label3.TabIndex = 2;
             label3.Text = "Müzayede Bitiş Tarihi :";
             // 
             // txtName
             // 
-            txtName.Location = new Point(163, 75);
+            txtName.Location = new Point(265, 120);
+            txtName.Margin = new Padding(5, 5, 5, 5);
             txtName.Name = "txtName";
-            txtName.Size = new Size(210, 27);
+            txtName.Size = new Size(339, 39);
             txtName.TabIndex = 3;
             // 
             // txtStartingPrice
             // 
-            txtStartingPrice.Location = new Point(163, 110);
+            txtStartingPrice.Location = new Point(265, 176);
+            txtStartingPrice.Margin = new Padding(5, 5, 5, 5);
             txtStartingPrice.Name = "txtStartingPrice";
-            txtStartingPrice.Size = new Size(210, 27);
+            txtStartingPrice.Size = new Size(339, 39);
             txtStartingPrice.TabIndex = 4;
             // 
             // dtpEndDate
             // 
             dtpEndDate.CustomFormat = "dd.MM.yyyy HH:mm";
             dtpEndDate.Format = DateTimePickerFormat.Custom;
-            dtpEndDate.Location = new Point(163, 185);
+            dtpEndDate.Location = new Point(265, 296);
+            dtpEndDate.Margin = new Padding(5, 5, 5, 5);
             dtpEndDate.Name = "dtpEndDate";
             dtpEndDate.ShowUpDown = true;
-            dtpEndDate.Size = new Size(210, 27);
+            dtpEndDate.Size = new Size(339, 39);
             dtpEndDate.TabIndex = 5;
             // 
             // btnProductSave
             // 
-            btnProductSave.Location = new Point(213, 223);
+            btnProductSave.Location = new Point(346, 357);
+            btnProductSave.Margin = new Padding(5, 5, 5, 5);
             btnProductSave.Name = "btnProductSave";
-            btnProductSave.Size = new Size(94, 29);
+            btnProductSave.Size = new Size(153, 46);
             btnProductSave.TabIndex = 6;
             btnProductSave.Text = "Kaydet";
             btnProductSave.UseVisualStyleBackColor = true;
@@ -111,37 +118,39 @@
             // dgvProducts
             // 
             dgvProducts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvProducts.Location = new Point(425, 64);
+            dgvProducts.Location = new Point(691, 102);
+            dgvProducts.Margin = new Padding(5, 5, 5, 5);
             dgvProducts.Name = "dgvProducts";
             dgvProducts.RowHeadersWidth = 51;
-            dgvProducts.Size = new Size(300, 188);
+            dgvProducts.Size = new Size(488, 301);
             dgvProducts.TabIndex = 7;
             dgvProducts.CellClick += dgvProducts_CellClick;
             // 
             // Açıklama
             // 
             Açıklama.AutoSize = true;
-            Açıklama.Location = new Point(83, 154);
+            Açıklama.Location = new Point(135, 246);
+            Açıklama.Margin = new Padding(5, 0, 5, 0);
             Açıklama.Name = "Açıklama";
-            Açıklama.Size = new Size(70, 20);
+            Açıklama.Size = new Size(109, 32);
             Açıklama.TabIndex = 8;
             Açıklama.Text = "Açıklama";
             // 
             // txtDescription
             // 
-            txtDescription.Location = new Point(163, 147);
+            txtDescription.Location = new Point(265, 235);
+            txtDescription.Margin = new Padding(5, 5, 5, 5);
             txtDescription.Multiline = true;
             txtDescription.Name = "txtDescription";
             txtDescription.ScrollBars = ScrollBars.Vertical;
-            txtDescription.Size = new Size(210, 34);
+            txtDescription.Size = new Size(339, 52);
             txtDescription.TabIndex = 9;
             // 
             // Delete
             // 
-            Delete.Location = new Point(122, 268);
-            Delete.Margin = new Padding(2);
+            Delete.Location = new Point(198, 429);
             Delete.Name = "Delete";
-            Delete.Size = new Size(91, 29);
+            Delete.Size = new Size(148, 46);
             Delete.TabIndex = 10;
             Delete.Text = "Sil";
             Delete.UseVisualStyleBackColor = true;
@@ -149,10 +158,9 @@
             // 
             // Update
             // 
-            Update.Location = new Point(303, 268);
-            Update.Margin = new Padding(2);
+            Update.Location = new Point(492, 429);
             Update.Name = "Update";
-            Update.Size = new Size(90, 29);
+            Update.Size = new Size(146, 46);
             Update.TabIndex = 11;
             Update.Text = "Güncelle";
             Update.UseVisualStyleBackColor = true;
@@ -178,15 +186,15 @@
             // çıkışYapToolStripMenuItem
             // 
             çıkışYapToolStripMenuItem.Name = "çıkışYapToolStripMenuItem";
-            çıkışYapToolStripMenuItem.Size = new Size(359, 44);
+            çıkışYapToolStripMenuItem.Size = new Size(241, 44);
             çıkışYapToolStripMenuItem.Text = "Çıkış yap";
             çıkışYapToolStripMenuItem.Click += çıkışYapToolStripMenuItem_Click;
             // 
             // ProductForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1300, 720);
             Controls.Add(Update);
             Controls.Add(Delete);
             Controls.Add(txtDescription);
@@ -199,8 +207,10 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(lblUrunAdi);
+            Margin = new Padding(5, 5, 5, 5);
             Name = "ProductForm";
             Text = "Ürün Yönetim Paneli";
+            Load += ProductForm_Load_1;
             ((System.ComponentModel.ISupportInitialize)dgvProducts).EndInit();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();

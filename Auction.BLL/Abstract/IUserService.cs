@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Auction.Entities;
+﻿using Auction.Entities;
 
 namespace Auction.BLL.Abstract
 {

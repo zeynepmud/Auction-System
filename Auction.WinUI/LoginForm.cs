@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Windows.Forms;
+﻿
 using Auction.BLL.Abstract;
 using Auction.BLL.Concrete;
 using Auction.DAL.Abstract;
@@ -19,7 +15,7 @@ namespace Auction.WinUI
         {
             InitializeComponent();
 
-            // --- SOLID & UNIT OF WORK UYUMU ---
+
             var context = new Auction.DAL.AppDbContext();
             IUnitOfWork uow = new UnitOfWork(context);
             _userService = new UserService(new EfRepositoryBase<User>(context), uow);
@@ -42,35 +38,34 @@ namespace Auction.WinUI
                 _userService.Save();
             }
         }
-
+        //Girişte hesap kontrol ayarları
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            // 1. Kullanıcıyı mail ve şifreyle buluyoruz
+
             var user = _userService.GetAll()
                 .FirstOrDefault(u => u.Email == txtEmail.Text && u.Password == txtPassword.Text);
 
             if (user != null)
             {
-                // --- KRİTİK GÜVENLİK KONTROLÜ (ISACTIVE) ---
-                // Admin panelinden askıya alınan kullanıcı girişi burada engellenir.
+
                 if (!user.IsActive)
                 {
                     MessageBox.Show("Hesabınız yönetici tarafından dondurulmuştur. Giriş yapamazsınız.",
                                     "Erişim Engellendi", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    return; // İşlemi bitir, formları açma
+                    return; 
                 }
 
                 MessageBox.Show($"Hoş geldin, {user.FirstName}!");
 
-                // 2. ROL TABANLI YÖNLENDİRME
+                
                 if (user.Role == "Admin")
                 {
-                    // Adminse hazırladığımız yeni Dashboard açılıyor
+                   
                     new AdminDashboardForm().Show();
                 }
                 else
                 {
-                    // Standart kullanıcıysa müzayede salonu açılıyor
+                    
                     new BiddingHallForm(user).Show();
                 }
 
@@ -87,6 +82,11 @@ namespace Auction.WinUI
             txtEmail.Clear();
             txtPassword.Clear();
             txtEmail.Focus();
+        }
+
+        private void LoginForm_Load_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Auction.WinUI
 {
     public partial class AdminDashboardForm : Form
     {
-        // Servis katmanlarımızı readonly olarak tanımlıyoruz (OOP prensipleri)
+        // Servis katmanlarımızı readonly olarak tanımlıyoruz 
         private readonly IProductService _productService;
         private readonly IUserService _userService;
         private readonly IBidService _bidService;
@@ -22,12 +22,10 @@ namespace Auction.WinUI
         {
             InitializeComponent();
 
-            // --- MERKEZİ MİMARİ KURULUM (Unit of Work & Repository Pattern) ---
-            // Tüm işlemlerin aynı veritabanı bağlantısı üzerinden yürümesi için Context ve UoW oluşturuyoruz.
+            // --- MERKEZİ MİMARİ KURULUM  ---
             var context = new Auction.DAL.AppDbContext();
             IUnitOfWork uow = new UnitOfWork(context);
 
-            // Servislerimizi, ilgili Repository ve Unit of Work ile ayağa kaldırıyoruz.
             _productService = new ProductService(new EfRepositoryBase<Product>(context), uow);
             _userService = new UserService(new EfRepositoryBase<User>(context), uow);
             _bidService = new BidService(new EfRepositoryBase<Bid>(context), uow);
@@ -35,28 +33,21 @@ namespace Auction.WinUI
 
         private void AdminDashboardForm_Load(object sender, EventArgs e)
         {
-            // Form açıldığında tüm verileri ve istatistikleri yükle
             TumVerileriTazele();
         }
 
-        /// <summary>
-        /// Tüm istatistikleri hesaplayan ve tabloları güncelleyen merkezi metot.
-        /// </summary>
+        // Tüm istatistikleri hesaplayan ve tabloları güncelleyen merkezi metot.
         private void TumVerileriTazele()
         {
             try
             {
-                // Veritabanı yükünü azaltmak için listeleri belleğe alıyoruz.
                 var tumUrunler = _productService.GetAll();
                 var tumTeklifler = _bidService.GetAll();
                 var tumKullanicilar = _userService.GetAll();
 
-                // 1. İSTATİSTİK KARTLARI HESAPLAMALARI
                 lblTotalUsers.Text = tumKullanicilar.Count().ToString();
                 lblActiveAuctions.Text = tumUrunler.Count(p => p.EndDate > DateTime.Now).ToString();
 
-                // GERÇEK EKONOMİK HACİM HESABI (Mühendislik Mantığı)
-                // Her bir ürün için verilen en yüksek teklifi bulup topluyoruz.
                 decimal gercekEkonomikHacim = tumUrunler.Sum(p =>
                     tumTeklifler
                         .Where(b => b.ProductId == p.Id)
@@ -67,7 +58,7 @@ namespace Auction.WinUI
 
                 lblTotalVolume.Text = gercekEkonomikHacim.ToString("C2"); // ₺ Para formatı
 
-                // 2. KULLANICI YÖNETİMİ TABLOSU (Sekme 1)
+                // KULLANICI YÖNETİMİ TABLOSU (Sekme 1)
                 dgvUsers.DataSource = null;
                 dgvUsers.DataSource = tumKullanicilar.Select(u => new
                 {
@@ -78,7 +69,7 @@ namespace Auction.WinUI
                     Durum = u.IsActive ? "Aktif" : "Askıda"
                 }).ToList();
 
-                // 3. MÜZAYEDE GEÇMİŞİ TABLOSU (Sekme 2 - Biten Ürünler)
+                //  MÜZAYEDE GEÇMİŞİ TABLOSU (Sekme 2)
                 dgvHistory.DataSource = null;
                 dgvHistory.DataSource = tumUrunler
                     .Where(p => p.EndDate <= DateTime.Now)
@@ -90,8 +81,7 @@ namespace Auction.WinUI
                         BitisTarihi = p.EndDate
                     }).ToList();
 
-                // 4. CANLI TAKİBİ (Sekme 3 - Aktif Ürünler)
-                // dgvActiveMonitor isimli bir grid eklediğini varsayıyoruz.
+                // CANLI TAKİBİ (Sekme 3)
                 if (dgvActiveMonitor != null)
                 {
                     dgvActiveMonitor.DataSource = null;
@@ -116,7 +106,6 @@ namespace Auction.WinUI
         // Seçilen ürünün tekliflerini, kullanıcı isimleriyle beraber getiren yardımcı metot.
         private void TeklifDetaylariniGetir(int productId, DataGridView hedefGrid)
         {
-            // ID yerine isim göstermek için kullanıcı sözlüğü oluşturuyoruz.
             var kullaniciSozlugu = _userService.GetAll().ToDictionary(u => u.Id, u => $"{u.FirstName} {u.LastName}");
 
             hedefGrid.DataSource = _bidService.GetAll()
@@ -124,7 +113,7 @@ namespace Auction.WinUI
                 .OrderByDescending(b => b.Amount)
                 .Select(b => new
                 {
-                    Teklif = b.Amount, // "Tutar" yerine "Teklif"
+                    Teklif = b.Amount, 
                     Zaman = b.BidTime,
                     Kullanici = kullaniciSozlugu.ContainsKey(b.UserId) ? kullaniciSozlugu[b.UserId] : "Bilinmiyor"
                 }).ToList();
@@ -146,7 +135,6 @@ namespace Auction.WinUI
             if (dgvActiveMonitor.CurrentRow != null)
             {
                 int productId = (int)dgvActiveMonitor.CurrentRow.Cells["Id"].Value;
-                // dgvActiveBids isimli aktif detay gridine verileri basar.
                 TeklifDetaylariniGetir(productId, dgvActiveBids);
             }
         }
@@ -188,7 +176,6 @@ namespace Auction.WinUI
         }
 
         // --- ÜRÜN YÖNETİM MODÜLÜNE GEÇİŞ ---
-
         private void btnManageProducts_Click(object sender, EventArgs e)
         {
             ProductForm frm = new ProductForm();

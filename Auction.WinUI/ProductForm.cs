@@ -15,7 +15,6 @@ namespace Auction.WinUI
         {
             InitializeComponent();
 
-            // Servisimizi UoW ile besliyoruz
             var context = new Auction.DAL.AppDbContext();
             IUnitOfWork uow = new UnitOfWork(context);
             _productService = new ProductService(new EfRepositoryBase<Product>(context), uow);
@@ -26,8 +25,8 @@ namespace Auction.WinUI
         private void dgvProducts_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dgvProducts.CurrentRow != null)
-            {              
-                _selectedProduct = (Product)dgvProducts.CurrentRow.DataBoundItem;            
+            {
+                _selectedProduct = (Product)dgvProducts.CurrentRow.DataBoundItem;
                 txtName.Text = _selectedProduct.Name;
                 txtStartingPrice.Text = _selectedProduct.StartingPrice.ToString();
                 txtDescription.Text = _selectedProduct.Description;
@@ -90,11 +89,11 @@ namespace Auction.WinUI
                 {
                     try
                     {
-                        _productService.Delete(_selectedProduct); 
-                        _productService.Save();                    
+                        _productService.Delete(_selectedProduct);
+                        _productService.Save();
 
                         MessageBox.Show("Ürün başarıyla silindi.", "Bilgi");
-                        TemizleVeListele(); 
+                        TemizleVeListele();
                     }
                     catch (Exception ex)
                     {
@@ -127,18 +126,18 @@ namespace Auction.WinUI
 
         // --- YARDIMCI METOT: EKRANI SIFIRLAR VE LİSTEYİ TAZELEMEZ ---
         private void TemizleVeListele()
-        {           
+        {
             txtName.Clear();
             txtStartingPrice.Clear();
-            txtDescription.Clear();         
-            dtpEndDate.Value = DateTime.Now;           
+            txtDescription.Clear();
+            dtpEndDate.Value = DateTime.Now;
             _selectedProduct = null;
             UrunListele();
         }
 
         private void çıkışYapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
             DialogResult result = MessageBox.Show(
                 "Çıkış yapmak istediğinize emin misiniz?",
                 "Çıkış Onayı",
@@ -146,13 +145,18 @@ namespace Auction.WinUI
                 MessageBoxIcon.Question
             );
 
-            
+
             if (result == DialogResult.Yes)
             {
                 this.Close();
                 var loginForm = new LoginForm();
                 loginForm.Show();
             }
+        }
+
+        private void ProductForm_Load_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,6 +1,6 @@
 using Auction.BLL.Abstract;
 using Auction.BLL.Concrete;
-using Auction.DAL.Abstract; // Unit of Work için ekledik
+using Auction.DAL.Abstract;
 using Auction.DAL.Concrete;
 using Auction.Entities;
 using System.Text.RegularExpressions;
@@ -14,12 +14,8 @@ namespace Auction.WinUI
         public RegisterForm()
         {
             InitializeComponent();
-
-            // Önce veritabaný nesnemizi (Context) oluþturuyoruz.
             var context = new Auction.DAL.AppDbContext();
-            // Tüm iþlemleri tek bir merkezden yönetmek için Unit of Work oluþturuyoruz.
             IUnitOfWork uow = new UnitOfWork(context);
-            // Servisimize hem Repository'yi hem de Unit of Work'ü veriyoruz (Dependency Injection mantýðý).
             _userService = new UserService(new EfRepositoryBase<User>(context), uow);
         }
 
@@ -59,8 +55,8 @@ namespace Auction.WinUI
                     Role = "User"
                 };
 
-                _userService.Add(user); // Önce listeye ekliyoruz
-                _userService.Save();    // Unit of Work sayesinde veritabanýna þimdi mühürleniyor
+                _userService.Add(user); 
+                _userService.Save();    
 
                 MessageBox.Show("Kayýt baþarýlý! Giriþ yapabilirsiniz.", "Bilgi");
                 this.Close();
@@ -78,6 +74,11 @@ namespace Auction.WinUI
             txtEmail.Clear();
             txtPassword.Clear();
             txtFirstName.Focus();
+        }
+
+        private void RegisterForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

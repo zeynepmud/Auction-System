@@ -14,7 +14,7 @@ namespace Auction.Entities
         public decimal StartingPrice { get; set; } 
         public DateTime EndDate { get; set; }
 
-        // İlişki: Bir ürüne birden fazla teklif gelebilir.
+        // Bir ürüne birden fazla teklif gelebilir.
         public virtual ICollection<Bid> Bids { get; set; } = new List<Bid>();
     }
 }

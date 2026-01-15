@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿
 using Auction.BLL.Abstract;
-using Auction.DAL.Abstract; // Unit of Work ve Repo için
+using Auction.DAL.Abstract; 
 using Auction.Entities;
 
 namespace Auction.BLL.Concrete
@@ -9,9 +8,9 @@ namespace Auction.BLL.Concrete
     public class BidService : IBidService
     {
         private readonly IRepository<Bid> _bidRepository;
-        private readonly IUnitOfWork _uow; // Değişiklikleri toplu kaydeden arkadaşımız
+        private readonly IUnitOfWork _uow; 
 
-        // Constructor Injection: Repository ve UoW dışarıdan enjekte ediliyor
+        // Constructor Injection
         public BidService(IRepository<Bid> bidRepository, IUnitOfWork uow)
         {
             _bidRepository = bidRepository;

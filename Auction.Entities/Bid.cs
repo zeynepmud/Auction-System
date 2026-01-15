@@ -11,7 +11,7 @@ namespace Auction.Entities
         public decimal Amount { get; set; }
         public DateTime BidTime { get; set; }
 
-        // Foreign Keys (Dış Anahtarlar)
+        // Foreign Keys 
         public int UserId { get; set; } 
         public virtual User User { get; set; } = null!;
 
